@@ -7,18 +7,18 @@ class OrderSheet extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            orders: [],
+            products: [],
         }
     }
 
     componentDidMount() {
-        this.getOrders();
+        this.getProducts();
     }
-    getOrders = (event) => {
-        axios.get('api/dashboard').then(response => {
+    getProducts = (event) => {
+        axios.get(`api/ordersheet/${this.props.match.params.id}`).then(response => {
             this.setState({
                 ...this.state,
-                orders: response.data,
+                products: response.data,
             })
         })
     }
@@ -30,14 +30,14 @@ class OrderSheet extends Component {
     render() {
         return (
             <div>
+
                 <p>Order Sheet</p>
-                {/* <h1 id="welcome">
-                    Welcome, {this.props.user.username}!
-     </h1>
-                <p>Your Orders:</p>
-                <p>{this.state.orders.map((order) => {
-                    return (order.order_name)
-                })}</p> */}
+                {/* <p>{JSON.stringify(this.props)}</p> */}
+                <ul>{this.state.products.map((product) => {
+                    console.log('products', this.state.products);
+                    
+                    return (<li>{product.product_name}</li>)
+                })}</ul>
                 <LogOutButton className="log-in" />
             </div>
         )

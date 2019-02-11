@@ -42,7 +42,7 @@ render(){
      </h1>
       <p>Your Orders:</p>
       <ul>{this.state.orders.map((order) => {
-        return (<UserPageOrders order={order} history={this.props.history} getOrders={this.getOrders}/>)
+        return (<UserPageOrders key={order.id}order={order} history={this.props.history} getOrders={this.getOrders}/>)
       })}</ul>
      <LogOutButton className="log-in" />
    </div>

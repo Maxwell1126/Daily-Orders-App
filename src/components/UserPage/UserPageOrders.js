@@ -1,20 +1,16 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import LogOutButton from '../LogOutButton/LogOutButton';
 // import OrderSheet from '../OrderSheet/OrderSheet';
 // import axios from 'axios';
 
 class UserPageOrders extends Component {
-    constructor(props) {
-        super(props)
-    }
 
     componentDidMount() {
         this.props.getOrders();
     }
 
     toOrderSheet = (event) => {
-        this.props.history.push(`/home/:${this.props.order.id}`)
+        this.props.history.push(`/home/${this.props.order.id}`)
         console.log('stuff', this.props.order.id);
 
     }
@@ -25,7 +21,7 @@ class UserPageOrders extends Component {
     // 
     render() {
         
-        return (<li onClick={this.toOrderSheet}>{JSON.stringify(this.props.order.id)}{this.props.order.order_name}</li>)
+        return (<li onClick={this.toOrderSheet}>{this.props.order.order_name}</li>)
     }
 }
 // Instead of taking everything from state, we just want the user info.
