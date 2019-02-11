@@ -7,7 +7,8 @@ const router = express.Router();
  */
 router.get('/', (req, res) => {
     if(req.isAuthenticated){
-        pool.query(`SELECT * FROM "order" WHERE "person_id" =${req.user.id};`).then((results) => {
+        pool.query(`SELECT * FROM "order" 
+                    WHERE "person_id" =${req.user.id};`).then((results) => {
             res.send(results.rows);
         }).catch((error) => {
             console.log('error in dashboard get', error);

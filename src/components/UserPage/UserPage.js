@@ -1,8 +1,8 @@
 import React , {Component} from 'react';
 import { connect } from 'react-redux';
 import LogOutButton from '../LogOutButton/LogOutButton';
-import OrderSheet from '../OrderSheet/OrderSheet';
 import axios from 'axios';
+import UserPageOrders from './UserPageOrders';
 
 class UserPage extends Component {
   constructor(props){
@@ -23,6 +23,12 @@ getOrders = (event) => {
     })
   })
 }
+
+toOrderSheet = (event) =>{
+  this.props.history.push('/home:/id')
+  console.log('stuff',this.state.orders.id);
+  
+}
 // this could also be written with destructuring parameters as:
 // const UserPage = ({ user }) => (
 // and then instead of `props.user.username` you could use `user.username`
@@ -35,9 +41,9 @@ render(){
        Welcome, { this.props.user.username }!
      </h1>
       <p>Your Orders:</p>
-      <p>{this.state.orders.map((order) => {
-        return (order.order_name)
-      })}</p>
+      <ul>{this.state.orders.map((order) => {
+        return (<UserPageOrders order={order} history={this.props.history} getOrders={this.getOrders}/>)
+      })}</ul>
      <LogOutButton className="log-in" />
    </div>
   )

@@ -19,6 +19,7 @@ import InfoPage from '../InfoPage/InfoPage';
 
 
 import './App.css';
+import OrderSheet from '../OrderSheet/OrderSheet';
 
 class App extends Component {
   componentDidMount () {
@@ -48,6 +49,11 @@ class App extends Component {
               exact
               path="/home"
               component={UserPage}
+            />
+            <ProtectedRoute
+              exact
+              path="/home/:id"
+              component={OrderSheet}
             />
             {/* This works the same as the other protected route, except that if the user is logged in,
             they will see the info page instead. */}
