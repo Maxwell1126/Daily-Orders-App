@@ -14,6 +14,7 @@ class OrderSheet extends Component {
     componentDidMount() {
         this.getProducts();
     }
+    
     getProducts = (event) => {
         axios.get(`api/ordersheet/${this.props.match.params.id}`).then(response => {
             this.setState({
@@ -27,17 +28,25 @@ class OrderSheet extends Component {
     // and then instead of `props.user.username` you could use `user.username`
     // this.render
     // 
+
+    upCount = ()=>{
+        console.log('this',this);
+        
+    }
+
     render() {
         return (
             <div>
-
+                <p>{JSON.stringify(this.state.products)}</p>
                 <p>Order Sheet</p>
                 {/* <p>{JSON.stringify(this.props)}</p> */}
-                <ul>{this.state.products.map((product) => {
-                    console.log('products', this.state.products);
-                    
-                    return (<li>{product.product_name}</li>)
-                })}</ul>
+                <div>{this.state.products.map((product) => {
+                    return (<div>{product.product_name} 
+                            <button onClick={this.upCount}>+</button>{product.quantity}<button>-</button></div>)
+                })}</div>
+                <button>Submit</button>
+                <br></br>
+                <br></br>
                 <LogOutButton className="log-in" />
             </div>
         )
