@@ -3,7 +3,8 @@ import { connect } from 'react-redux';
 import LogOutButton from '../LogOutButton/LogOutButton';
 import axios from 'axios';
 import UserPageOrders from './UserPageOrders';
-
+const moment = require('moment');
+moment().format();
 class UserPage extends Component {
   constructor(props){
     super(props)
@@ -41,12 +42,11 @@ toHistory = (event)=>{
 render(){
   return(
     <div>
-      {/* {JSON.stringify(moment().format('l'))} */}
       
      <h1 id="welcome">
        Welcome, { this.props.user.username }!
      </h1>
-     <p>{JSON.stringify(this.props)}</p>
+     {/* <p>{JSON.stringify(this.props)}</p> */}
       <p>Your Orders:</p>
       <ul>{this.state.orders.map((order) => {
         return (<UserPageOrders key={order.id}order={order} history={this.props.history} getOrders={this.getOrders}/>)

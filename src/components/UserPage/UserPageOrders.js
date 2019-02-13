@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 // import OrderSheet from '../OrderSheet/OrderSheet';
 import axios from 'axios';
+const moment = require('moment');
+moment().format();
 
 class UserPageOrders extends Component {
 
