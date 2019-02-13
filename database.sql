@@ -28,7 +28,7 @@ CREATE TABLE "order_product" ("id" SERIAL PRIMARY KEY,
 CREATE TABLE "product_fulfillment" ("id" SERIAL PRIMARY KEY, 
 "fulfillment_id" INTEGER, FOREIGN KEY("fulfillment_id") REFERENCES "fulfillment"("id"), 
 "product_id" INTEGER, FOREIGN KEY("product_id") REFERENCES "product"("id"), 
-"quantity" INTEGER);
+"quantity" INTEGER DEFAULT 0);
 
 CREATE TABLE "note_fulfillment" ("id" SERIAL PRIMARY KEY, 
 "fulfillment_id" INTEGER, FOREIGN KEY("fulfillment_id") REFERENCES "fulfillment"("id"), 
@@ -58,8 +58,8 @@ VALUES('Incomplete'),('Complete'),('Pending Approval'),('Approved');
 INSERT INTO "fulfillment" ("order_id", "person_id", "date", "status_id") 
 VALUES(1,1,'2019-02-11',1),(3,1,'2019-02-10',1);
 
-INSERT INTO "product_fulfillment" ("fulfillment_id","product_id","quantity") 
-VALUES(1,1,1),(1,2,1),(1,3,0),(1,4,2),(1,5,1),(1,6,1),(1,7,0),(1,8,0);
+INSERT INTO "product_fulfillment" ("fulfillment_id","product_id") 
+VALUES(1,1),(1,2),(1,3),(1,4),(1,5),(1,6),(1,7),(1,8),(2,9),(2,10),(2,11);
 
 INSERT INTO "note_fulfillment" ("fulfillment_id","note_id") 
 VALUES(1,1),(1,2);

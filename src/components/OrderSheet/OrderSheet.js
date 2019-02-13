@@ -53,13 +53,14 @@ class OrderSheet extends Component {
     render() {
         return (
             <div>
-                <p>{JSON.stringify(this.state.products)}</p>
+                <p>{JSON.stringify(this.props)}</p>
                 {/* <p>{JSON.stringify(this.state.products[1])}</p>
                 <p>{JSON.stringify(this.state.products[2])}</p> */}
-                <p>Order Sheet</p>
+                {/* <h1>{this.props.order.order_name}</h1> */}
+                <h1>Order Sheet</h1>
                 {/* <p>{JSON.stringify(this.props)}</p> */}
                 <div>{this.state.products.map((product, i) => {
-                    console.log('product',product);
+                    //console.log('product',product);
                     return (<OrderSheetItem
                         history={this.props.history}
                         product={product}

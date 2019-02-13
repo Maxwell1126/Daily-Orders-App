@@ -41,11 +41,13 @@ toHistory = (event)=>{
 render(){
   return(
     <div>
+      {/* {JSON.stringify(moment().format('l'))} */}
+      
      <h1 id="welcome">
        Welcome, { this.props.user.username }!
      </h1>
+     <p>{JSON.stringify(this.props)}</p>
       <p>Your Orders:</p>
-      <p>{JSON.stringify(this.props.user.id)}</p>
       <ul>{this.state.orders.map((order) => {
         return (<UserPageOrders key={order.id}order={order} history={this.props.history} getOrders={this.getOrders}/>)
       })}</ul>
