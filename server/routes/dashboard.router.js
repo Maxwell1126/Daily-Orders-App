@@ -60,6 +60,7 @@ router.post('/', (req, res) => {
                 await client.query('COMMIT');
                 res.send(results.rows)
                 }else{
+                res.sendStatus(201)
 
                 }
             } catch (e) {

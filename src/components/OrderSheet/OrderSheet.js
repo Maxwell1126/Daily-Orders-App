@@ -18,7 +18,10 @@ class OrderSheet extends Component {
     
     getProducts = (event) => {
         axios.get(`api/ordersheet/${this.props.match.params.id}`).then(response => {
+            
+            console.log('response,'  );
             this.setState({
+                
                 ...this.state,
                 products: response.data,
             })
@@ -53,9 +56,9 @@ class OrderSheet extends Component {
     render() {
         return (
             <div>
-                <p>{JSON.stringify(this.props)}</p>
-                {/* <p>{JSON.stringify(this.state.products[1])}</p>
-                <p>{JSON.stringify(this.state.products[2])}</p> */}
+                {/* <p>{JSON.stringify(this.props)}</p> */}
+                {/* {/* <p>{JSON.stringify(this.state.products[1])}</p> */}
+                <p>{JSON.stringify(this.state.products)}</p> */}
                 {/* <h1>{this.props.order.order_name}</h1> */}
                 <h1>Order Sheet</h1>
                 {/* <p>{JSON.stringify(this.props)}</p> */}
