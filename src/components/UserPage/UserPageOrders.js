@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 // import OrderSheet from '../OrderSheet/OrderSheet';
-// import axios from 'axios';
+import axios from 'axios';
 
 class UserPageOrders extends Component {
 
@@ -10,9 +10,16 @@ class UserPageOrders extends Component {
     }
 
     toOrderSheet = (event) => {
-        this.props.history.push(`/home/${this.props.order.id}`)
-        console.log('stuff', this.props.order.id);
-
+        axios({
+            method:'POST',
+            url:'/api/dashboard',
+            data:{
+                id:this.props.order.id,
+                person:this.props.user.id
+            }
+        }).then((response)=>{
+            this.props.history.push(`/home/${this.props.order.id}`)
+        })
     }
     // this could also be written with destructuring parameters as:
     // const UserPage = ({ user }) => (

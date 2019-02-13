@@ -53,8 +53,8 @@ class OrderSheet extends Component {
     render() {
         return (
             <div>
-                {/* <p>{JSON.stringify(this.state.products[0])}</p>
-                <p>{JSON.stringify(this.state.products[1])}</p>
+                <p>{JSON.stringify(this.state.products)}</p>
+                {/* <p>{JSON.stringify(this.state.products[1])}</p>
                 <p>{JSON.stringify(this.state.products[2])}</p> */}
                 <p>Order Sheet</p>
                 {/* <p>{JSON.stringify(this.props)}</p> */}

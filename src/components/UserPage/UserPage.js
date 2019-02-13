@@ -41,6 +41,7 @@ render(){
        Welcome, { this.props.user.username }!
      </h1>
       <p>Your Orders:</p>
+      <p>{JSON.stringify(this.props.user.id)}</p>
       <ul>{this.state.orders.map((order) => {
         return (<UserPageOrders key={order.id}order={order} history={this.props.history} getOrders={this.getOrders}/>)
       })}</ul>
