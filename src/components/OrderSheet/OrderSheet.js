@@ -19,7 +19,7 @@ class OrderSheet extends Component {
     getProducts = (event) => {
         axios.get(`api/ordersheet/${this.props.match.params.id}`).then(response => {
             
-            console.log('response,'  );
+            //console.log('response,'  );
             this.setState({
                 
                 ...this.state,
@@ -28,6 +28,24 @@ class OrderSheet extends Component {
         })
     }
 
+    submitOrder = (event) =>{
+        //console.log('in submit order');
+        
+        let products={
+            products:this.state.products,
+            id:this.props.match.params.id,
+        }
+        axios({
+            method:'PUT',
+            url: '/api/ordersheet',
+            data:products,
+        }).then((response) =>{
+            this.getProducts();
+        }).catch((error)=>{
+            console.log('error on client putting orders', error);
+            
+        })
+    }
     // this could also be written with destructuring parameters as:
     // const UserPage = ({ user }) => (
     // and then instead of `props.user.username` you could use `user.username`
@@ -58,7 +76,7 @@ class OrderSheet extends Component {
             <div>
                 {/* <p>{JSON.stringify(this.props)}</p> */}
                 {/* {/* <p>{JSON.stringify(this.state.products[1])}</p> */}
-                <p>{JSON.stringify(this.state.products)}</p> */}
+                <p>{JSON.stringify(this.state.products)}</p>
                 {/* <h1>{this.props.order.order_name}</h1> */}
                 <h1>Order Sheet</h1>
                 {/* <p>{JSON.stringify(this.props)}</p> */}
@@ -72,7 +90,7 @@ class OrderSheet extends Component {
                         downQuantity={this.downQuantity}
                         getProducts={this.getProducts}/>)
                 })}</div>
-                <button>Submit</button>
+                <button onClick={this.submitOrder}>Submit</button>
                 <br></br>
                 <br></br>
                 <LogOutButton className="log-in" />
