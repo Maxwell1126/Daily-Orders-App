@@ -20,7 +20,7 @@ import InfoPage from '../InfoPage/InfoPage';
 
 import './App.css';
 import OrderSheet from '../OrderSheet/OrderSheet';
-
+import History from '../History/History';
 class App extends Component {
   componentDidMount () {
     this.props.dispatch({type: 'FETCH_USER'})
@@ -54,6 +54,11 @@ class App extends Component {
               exact
               path="/home/:id"
               component={OrderSheet}
+            />
+            <ProtectedRoute
+              exact
+              path="/history"
+              component={History}
             />
             {/* This works the same as the other protected route, except that if the user is logged in,
             they will see the info page instead. */}
