@@ -16,6 +16,8 @@ router.get('/:id', (req, res) => {
                                  AND "order_id" = ${req.params.id};`;
                 let response = await client.query(queryText)
                 const responseId = response.rows[0].id
+                console.log('wreck params: ', req.params);
+                
                 console.log('responseId:', responseId);
                 
                 queryText = `SELECT "product"."id", "product"."product_name", 
