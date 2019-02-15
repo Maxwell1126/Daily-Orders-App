@@ -1,27 +1,39 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-// import OrderSheet from '../OrderSheet/OrderSheet';
-import axios from 'axios';
+import UserPageOrdersClick from './UserPageOrdersClick';
 const moment = require('moment');
 moment().format();
-
 class UserPageOrders extends Component {
-
-    componentDidMount() {
-        this.props.getOrders();
+    constructor(props) {
+        super(props)
+        this.state = {
+            orders: [],
+        }
     }
 
+    componentDidMount() {
+        this.getOrders();
+    }
+
+    getOrders = () => {
+        const action = { type: 'GET_ORDERS' };
+        this.props.dispatch(action);
+    }
+    // getOrders = (event) => {
+    //   axios.get('api/dashboard').then(response => {
+    //     this.setState({
+    //       ...this.state,
+    //       orders: response.data,
+    //     })
+    //   })
+    // }
+
     toOrderSheet = (event) => {
-        axios({
-            method:'POST',
-            url:'/api/dashboard',
-            data:{
-                id:this.props.order.id,
-                person:this.props.user.id
-            }
-        }).then((response)=>{
-            this.props.history.push(`/home/${this.props.order.id}`)
-        })
+        this.props.history.push('/home:/id')
+    }
+
+    toHistory = (event) => {
+        this.props.history.push('/history')
     }
     // this could also be written with destructuring parameters as:
     // const UserPage = ({ user }) => (
@@ -29,15 +41,21 @@ class UserPageOrders extends Component {
     // this.render
     // 
     render() {
-        
-        return (<li onClick={this.toOrderSheet}>{this.props.order.order_name}</li>)
+        return (
+            <div>
+                <ul>{this.props.reduxStore.orders.map((order) => {
+        return (<UserPageOrdersClick key={order.id}order={order} history={this.props.history} getOrders={this.getOrders}/>)
+      })}</ul>
+                <button onClick={this.toHistory}>History</button>
+            </div>
+        )
     }
 }
 // Instead of taking everything from state, we just want the user info.
 // if you wanted you could write this code like this:
 // const mapStateToProps = ({user}) => ({ user });
-const mapStateToProps = state => ({
-    user: state.user,
+const mapStateToProps = reduxStore => ({
+    reduxStore,
 });
 
 // this allows us to use <App /> in index.js

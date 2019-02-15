@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import LogOutButton from '../LogOutButton/LogOutButton';
-import axios from 'axios';
 class History extends Component {
 constructor(){
     super()
@@ -17,14 +16,6 @@ constructor(){
     componentDidMount() {
         this.getOrders();
     }
-    // getOrders = (event) => {
-    //     axios.get('/api/dashboard').then(response => {
-    //         this.setState({
-    //             ...this.state.orders,
-    //             orders: response.data,
-    //         })
-    //     })
-    // }
 
     getOrders = () => {
         const action = { type: 'GET_ORDERS' };
@@ -35,19 +26,6 @@ constructor(){
         const action = { type: 'POST_HISTORY', payload: this.state.historyQuery }
         this.props.dispatch(action)
     }
-
-    // getHistory = (event) => {
-    //     axios({
-    //             method:'POST',
-    //             url:'/api/history',
-    //             data:this.state.historyQuery,
-    //          }).then(response => {
-    //         this.setState({
-    //             ...this.state.products,
-    //             products: response.data,
-    //         })
-    //     })
-    // }
 
     setOrder = (event) => {
         this.setState({
