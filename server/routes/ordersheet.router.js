@@ -88,15 +88,16 @@ router.put('/', (req, res) => {
                 i++
                     await client.query(queryText, value)
                 }
-                
+                if (req.body.button ==='submit'){
                 queryText = `UPDATE "fulfillment"
                              SET "status_id" =2
                              WHERE "id" = $1;`
                 value = [responseId]
                 await client.query(queryText, value)
+                }else{
                 
                 await client.query('COMMIT');
-                res.sendStatus(201)
+                res.sendStatus(201)}
             }catch (e) {
                 console.log('ROLLBACK', e);
                 await client.query('ROLLBACK');

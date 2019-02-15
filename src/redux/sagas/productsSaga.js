@@ -1,21 +1,19 @@
 import { put, takeLatest } from 'redux-saga/effects';
 import axios from 'axios';
 
-function* postHistory(action) {
+function* getProducts(action) {
     try {
-        console.log('in postHistory: ');
-        
-       let response= yield axios.post('/api/history', action.payload)
-        const products = {type: 'SET_PRODUCTS', payload: response.data }
+        let response = yield axios.get(`api/ordersheet/${this.props.match.params.id}`)
+        const products = { type: 'SET_PRODUCTS', payload: response.data }
         yield put(products)
     } catch (error) {
-        console.log('Error making POST request in postHistory', error);
+        console.log('Error making GET request in getProducts', error);
         alert('there was a problem');
     }
 }
 
 function* productsSaga() {
-    yield takeLatest('POST_HISTORY', postHistory);
+    yield takeLatest('GET_PRODUCTS', getProducts);
 }
 
 export default productsSaga;

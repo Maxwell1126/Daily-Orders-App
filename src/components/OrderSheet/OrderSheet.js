@@ -16,6 +16,12 @@ class OrderSheet extends Component {
         this.getProducts();
     }
     
+
+    // getProducts = () => {
+    //     const action = { type: 'GET_PRODUCTS' };
+    //     this.props.dispatch(action);
+    // }
+
     getProducts = (event) => {
         axios.get(`api/ordersheet/${this.props.match.params.id}`).then(response => {
             
@@ -28,12 +34,33 @@ class OrderSheet extends Component {
         })
     }
 
+    saveOrder = (event) => {
+        //console.log('in submit order');
+
+        let products = {
+            products: this.state.products,
+            id: this.props.match.params.id,
+               button: 'save',
+        }
+        axios({
+            method: 'PUT',
+            url: '/api/ordersheet',
+            data: products,
+        }).then((response) => {
+            this.getProducts();
+        }).catch((error) => {
+            console.log('error on client putting orders', error);
+
+        })
+    }
+
     submitOrder = (event) =>{
         //console.log('in submit order');
         
         let products={
             products:this.state.products,
             id:this.props.match.params.id,
+            button: 'submit',
         }
         axios({
             method:'PUT',
@@ -90,7 +117,8 @@ class OrderSheet extends Component {
                         downQuantity={this.downQuantity}
                         getProducts={this.getProducts}/>)
                 })}</div>
-                <button onClick={this.submitOrder}>Submit</button>
+                <button id="save" onClick={this.saveOrder}>Save</button>
+                <button id="submit" onClick={this.submitOrder}>Submit</button>
                 <br></br>
                 <br></br>
                 <LogOutButton className="log-in" />
@@ -101,8 +129,8 @@ class OrderSheet extends Component {
 // Instead of taking everything from state, we just want the user info.
 // if you wanted you could write this code like this:
 // const mapStateToProps = ({user}) => ({ user });
-const mapStateToProps = state => ({
-    user: state.user,
+const mapStateToProps = reduxStore => ({
+    reduxStore,
 });
 
 // this allows us to use <App /> in index.js
