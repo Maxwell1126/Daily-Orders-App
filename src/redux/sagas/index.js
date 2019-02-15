@@ -6,6 +6,7 @@ import ordersSaga from './ordersSaga';
 import historySaga from './historySaga';
 import ordersheetSaga from './ordersheetSaga';
 import productsSaga from './historySaga';
+import notesSaga from './notesSaga';
 // rootSaga is the primary saga.
 // It bundles up all of the other sagas so our project can use them.
 // This is imported in index.js as rootSaga
@@ -15,6 +16,7 @@ import productsSaga from './historySaga';
 // and login triggers setting the user
 export default function* rootSaga() {
   yield all([
+    notesSaga(),
     productsSaga(),
     ordersheetSaga(),
     historySaga(),

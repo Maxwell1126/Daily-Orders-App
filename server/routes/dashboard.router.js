@@ -44,8 +44,9 @@ router.post('/', (req, res) => {
                 queryText = `SELECT "product"."product_name", "order_product"."product_id"
                              FROM "product" JOIN "order_product" 
                              ON "product"."id" = "order_product"."product_id" 
-                             WHERE "order_product"."order_id" =${req.body.id};`
-                let responses = await client.query(queryText)
+                             WHERE "order_product"."order_id" =$1;`
+                values=[req.body.id]
+                let responses = await client.query(queryText,values)
                 console.log('response', responses.rows);
                 
                 

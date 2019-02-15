@@ -9,14 +9,16 @@ class OrderSheet extends Component {
         super(props)
         this.state = {
             products: [],
+            notes: [],
+            note:null,
         }
     }
 
     componentDidMount() {
         this.getProducts();
+        this.getNotes();
     }
     
-
     // getProducts = () => {
     //     const action = { type: 'GET_PRODUCTS' };
     //     this.props.dispatch(action);
@@ -24,8 +26,6 @@ class OrderSheet extends Component {
 
     getProducts = (event) => {
         axios.get(`api/ordersheet/${this.props.match.params.id}`).then(response => {
-            
-            //console.log('response,'  );
             this.setState({
                 
                 ...this.state,
@@ -34,13 +34,21 @@ class OrderSheet extends Component {
         })
     }
 
-    saveOrder = (event) => {
-        //console.log('in submit order');
+    getNotes = (event) => {
+        axios.get(`api/notes/${this.props.match.params.id}`).then(response => {
+            this.setState({
 
+                ...this.state,
+                notes: response.data,
+            })
+        })
+    }
+
+    saveOrder = (event) => {
         let products = {
             products: this.state.products,
             id: this.props.match.params.id,
-               button: 'save',
+            button: 'save',
         }
         axios({
             method: 'PUT',
@@ -55,8 +63,6 @@ class OrderSheet extends Component {
     }
 
     submitOrder = (event) =>{
-        //console.log('in submit order');
-        
         let products={
             products:this.state.products,
             id:this.props.match.params.id,
@@ -71,6 +77,26 @@ class OrderSheet extends Component {
         }).catch((error)=>{
             console.log('error on client putting orders', error);
             
+        })
+    }
+    setNote = (event) => {
+        this.setState({
+            note: {
+                ...this.state.note,
+                note: event.target.value,
+            }
+        })
+    }
+    addNote = (event) =>{
+        let note={
+            id: this.props.match.params.id,
+            note: this.state.note,}
+        axios({
+            method:'POST',
+            url:'/api/notes',
+            data: note,
+        }).then((response)=>{
+            this.getNotes()
         })
     }
     // this could also be written with destructuring parameters as:
@@ -103,10 +129,19 @@ class OrderSheet extends Component {
             <div>
                 {/* <p>{JSON.stringify(this.props)}</p> */}
                 {/* {/* <p>{JSON.stringify(this.state.products[1])}</p> */}
-                <p>{JSON.stringify(this.state.products)}</p>
+                <p>{JSON.stringify(this.state.note)}</p>
                 {/* <h1>{this.props.order.order_name}</h1> */}
                 <h1>Order Sheet</h1>
                 {/* <p>{JSON.stringify(this.props)}</p> */}
+                <h3>Existing Notes:</h3>
+                <ul>
+                    {this.state.notes.map((note)=>{
+                        return <li>{note.note_entry}</li>
+                    })}
+                </ul>
+                <h3>Add Notes:</h3>
+                <textarea onChange={this.setNote}></textarea>
+                <button onClick={this.addNote}>Add Note</button>
                 <div>{this.state.products.map((product, i) => {
                     //console.log('product',product);
                     return (<OrderSheetItem
