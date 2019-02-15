@@ -11,6 +11,16 @@ class UserPageOrders extends Component {
         this.props.getOrders();
     }
 
+    // toOrderSheet = (event) => {
+    //     let data= {
+    //         id: this.props.order.id,
+    //             person: this.props.user.id
+    //     }
+    //     const action = { type: 'POST_ORDERSHEET', payload: data }
+    //     this.props.dispatch(action);
+    //     this.props.history.push(`/home/${this.props.order.id}`);
+    // }
+
     toOrderSheet = (event) => {
         axios({
             method:'POST',

@@ -19,14 +19,6 @@ class UserPageOrders extends Component {
         const action = { type: 'GET_ORDERS' };
         this.props.dispatch(action);
     }
-    // getOrders = (event) => {
-    //   axios.get('api/dashboard').then(response => {
-    //     this.setState({
-    //       ...this.state,
-    //       orders: response.data,
-    //     })
-    //   })
-    // }
 
     toOrderSheet = (event) => {
         this.props.history.push('/home:/id')
