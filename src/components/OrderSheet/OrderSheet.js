@@ -192,10 +192,13 @@ class OrderSheet extends Component {
             </ul>
         }
         let addNoteContent;
+        let buttons;
             if (currentDate <=this.state.date) {
                 addNoteContent = <div><h3>Add Notes:</h3>
                     <textarea onChange={this.setNote}></textarea>
                     <button onClick={this.addNote}>Add Note</button></div>
+                buttons = <div><button id="save" onClick={this.saveOrder}>Save</button>
+                    <button id="submit" onClick={this.submitOrder}>Submit</button></div>
             }
         return (
             <div>
@@ -226,8 +229,7 @@ class OrderSheet extends Component {
                         downQuantity={this.downQuantity}
                         getProducts={this.getProducts}/>)
                 })}</div>
-                <button id="save" onClick={this.saveOrder}>Save</button>
-                <button id="submit" onClick={this.submitOrder}>Submit</button>
+                {buttons}
                 <br></br>
                 <br></br>
                 <LogOutButton className="log-in" />
