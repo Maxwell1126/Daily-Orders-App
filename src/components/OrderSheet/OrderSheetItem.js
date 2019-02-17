@@ -19,10 +19,16 @@ class OrderSheet extends Component {
     }
 
     render() {
-        return (<div>{this.props.product.product_name}
-            <button onClick={this.upCount}>+</button>
-            {this.props.product.quantity}
-            <button onClick={this.downCount}>-</button></div>)
+        let productContent;
+        if (this.props.currentDate > this.props.date) {
+            productContent = <div>{this.props.product.product_name}{this.props.product.quantity}</div>
+        } else {
+            productContent = <div>{ this.props.product.product_name }
+                < button onClick = { this.upCount } > +</button >
+                    { this.props.product.quantity }
+                < button onClick={this.downCount} > -</button ></div>
+        }
+        return (<div>{productContent}</div>)
     }
 }
 // Instead of taking everything from state, we just want the user info.

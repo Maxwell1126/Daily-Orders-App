@@ -4,7 +4,7 @@ import LogOutButton from '../LogOutButton/LogOutButton';
 import axios from 'axios';
 import OrderSheetItem from './OrderSheetItem';
 const moment = require('moment');
-
+const currentDate = moment().format('L')
 
 class OrderSheet extends Component {
     constructor(props) {
@@ -157,11 +157,12 @@ class OrderSheet extends Component {
     }
   
     backDay = (event)=>{
-        console.log('in backDay', this.state.date);
+        
         this.setState({
             date: moment(this.state.date).subtract(1, 'days').format('L'),
         }, () => {
             this.getProducts()
+            this.getNotes()
         });
         // myDate.subtract(1, 'days').format('L');
     }
@@ -171,6 +172,7 @@ class OrderSheet extends Component {
             date: moment(this.state.date).add(1, 'days').format('L'),   
         }, ()=>{
                this.getProducts()
+               this.getNotes()
         });
         console.log('in forwardDay', this.state.date)
         // this.getProducts();
@@ -180,9 +182,21 @@ class OrderSheet extends Component {
 
     render() {
         let noteHeader;
+        let noteContent;
         if (this.state.notes.length > 0) {
             noteHeader = <h3>Existing Notes:</h3>;
+            noteContent = <ul>
+                {this.state.notes.map((note) => {
+                    return <li>{note.note_entry}</li>
+                })}
+            </ul>
         }
+        let addNoteContent;
+            if (currentDate <=this.state.date) {
+                addNoteContent = <div><h3>Add Notes:</h3>
+                    <textarea onChange={this.setNote}></textarea>
+                    <button onClick={this.addNote}>Add Note</button></div>
+            }
         return (
             <div>
                 {/* {console.log('the date',this.state.date)} */}
@@ -198,17 +212,13 @@ class OrderSheet extends Component {
                 <button onClick={this.backDay}>-</button><h2>{this.state.date}</h2><button onClick={this.forwardDay}>+</button>
                 {/* <p>{JSON.stringify(this.props)}</p> */}
                 {noteHeader}
-                <ul>
-                    {this.state.notes.map((note)=>{
-                        return <li>{note.note_entry}</li>
-                    })}
-                </ul>
-                <h3>Add Notes:</h3>
-                <textarea onChange={this.setNote}></textarea>
-                <button onClick={this.addNote}>Add Note</button>
+                {noteContent}
+                {addNoteContent}
                 <div>{this.state.products.map((product, i) => {
                     //console.log('product',product);
                     return (<OrderSheetItem
+                        currentDate={currentDate}
+                        date={this.state.date}
                         history={this.props.history}
                         product={product}
                         i={i}

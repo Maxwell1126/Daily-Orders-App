@@ -19,15 +19,16 @@ router.post('/', (req, res) => {
                 let response = await client.query(queryText, values)
                 //console.log('response 18: ',response.rows);
                 
-                const responseId = response.rows[0].id
-                //console.log('responseId: ', responseId);
                 
+                //console.log('responseId: ', responseId);
+                if (response.rows.length >0){
+                const responseId = response.rows[0].id;
                 queryText = `SELECT "note"."note_entry" FROM "note" 
                 JOIN "note_fulfillment" ON 
                 "note_fulfillment"."note_id" = "note"."id"
                 WHERE "note_fulfillment"."fulfillment_id" = $1
-                ORDER BY "note"."id";`
-                values = [responseId]
+                ORDER BY "note"."id";`;
+                values = [responseId];
                 //console.log('values 31', values);
                 
                 let results = await client.query(queryText, values)
@@ -35,6 +36,7 @@ router.post('/', (req, res) => {
                 
                 await client.query('COMMIT');
                 res.send(results.rows)
+            }
             } catch (e) {
                 console.log('ROLLBACK', e);
                 await client.query('ROLLBACK');
