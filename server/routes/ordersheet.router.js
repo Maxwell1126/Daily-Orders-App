@@ -103,9 +103,9 @@ router.put('/', (req, res) => {
             try {
                 await client.query('BEGIN');
                 let queryText = `SELECT "id" FROM "fulfillment" 
-                                 WHERE "date" = CURRENT_DATE
-                                 AND "order_id" = $1;`;
-                let value= [req.body.id]
+                                 WHERE "date" = $1
+                                 AND "order_id" = $2;`;
+                let value= [req.body.date,req.body.id]
                 let response = await client.query(queryText, value)
                 const responseId = response.rows[0].id
                 console.log('responseId: ',responseId);

@@ -71,6 +71,7 @@ class OrderSheet extends Component {
         let products = {
             products: this.state.products,
             id: this.props.match.params.id,
+            date: this.state.date,
             button: 'save',
         }
         axios({
@@ -89,6 +90,7 @@ class OrderSheet extends Component {
         let products={
             products:this.state.products,
             id:this.props.match.params.id,
+            date:this.state.date,
             button: 'submit',
         }
         axios({
