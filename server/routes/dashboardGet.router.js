@@ -57,10 +57,13 @@ router.post('/', (req, res) => {
                             }
                         }
                     }
-                    queryText = `SELECT "fulfillment".*, "order"."order_name"
+                    queryText = `SELECT "fulfillment".*, "order"."order_name",
+                                 "person"."username"
                                  FROM "fulfillment"
                                  JOIN "order" ON "order"."id" =
                                  "fulfillment"."order_id"
+                                 JOIN "person" ON "person"."id" =
+                                 "fulfillment"."person_id"
                                  WHERE "date" = CURRENT_DATE;`
                     results = await client.query(queryText);
                     await client.query('COMMIT');

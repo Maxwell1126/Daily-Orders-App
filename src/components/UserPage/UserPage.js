@@ -26,7 +26,7 @@ render(){
   }
   return(
     <div>
-      {JSON.stringify(this.props.user.manager)}
+      {/* {JSON.stringify(this.props.user.manager)} */}
      <h1 id="welcome">
        Welcome, { this.props.user.username }!
      </h1>

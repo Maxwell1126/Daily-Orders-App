@@ -6,9 +6,6 @@ moment().format();
 class ManagerPageOrders extends Component {
     constructor(props) {
         super(props)
-        this.state = {
-            orders: [],
-        }
     }
 
     componentDidMount() {
@@ -31,8 +28,30 @@ class ManagerPageOrders extends Component {
     render() {
         return (
             <div>
-                <ul>{this.props.reduxStore.orders.map((order) => {
-                    return (<UserPageOrdersClick key={order.id} order={order} history={this.props.history} getOrders={this.getOrders} />)
+                {JSON.stringify(this.props.reduxStore.orders)}
+                <ul>Order's Pending Apporoval
+                {this.props.reduxStore.orders.map((order) => {
+                    if(order.status_id == 2){
+                    return (<UserPageOrdersClick key={order.id} order={order}
+                                                 history={this.props.history}
+                                                 getOrders={this.getOrders} />)
+                    }
+                })}</ul>
+                <ul>Order's Incomplete
+                {this.props.reduxStore.orders.map((order) => {
+                    if (order.status_id == 1) {
+                        return (<UserPageOrdersClick key={order.id} order={order}
+                            history={this.props.history}
+                            getOrders={this.getOrders} />)
+                    }
+                })}</ul>
+                <ul>Order's Approved
+                {this.props.reduxStore.orders.map((order) => {
+                    if (order.status_id == 4) {
+                        return (<UserPageOrdersClick key={order.id} order={order}
+                            history={this.props.history}
+                            getOrders={this.getOrders} />)
+                    }
                 })}</ul>
             </div>
         )

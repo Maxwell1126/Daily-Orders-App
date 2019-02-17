@@ -6,9 +6,6 @@ moment().format();
 class UserPageOrders extends Component {
     constructor(props) {
         super(props)
-        this.state = {
-            orders: [],
-        }
     }
 
     componentDidMount() {

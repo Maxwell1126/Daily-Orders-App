@@ -38,8 +38,16 @@ class UserPageOrders extends Component {
     // this.render
     // 
     render() {
-        
-        return (<li onClick={this.toOrderSheet}>{this.props.order.order_name}</li>)
+        let orderContent;
+        if(this.props.user.manager==true){
+            orderContent = <li onClick={this.toOrderSheet}>
+                            {this.props.order.order_name}
+                            {this.props.order.username}</li>
+        }else{
+            orderContent = <li onClick={this.toOrderSheet}>
+                            {this.props.order.order_name}</li>
+        }
+        return (orderContent)
     }
 }
 // Instead of taking everything from state, we just want the user info.
