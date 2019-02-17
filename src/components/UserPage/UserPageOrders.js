@@ -28,6 +28,7 @@ class UserPageOrders extends Component {
     render() {
         return (
             <div>
+                
                 <ul>{this.props.reduxStore.orders.map((order) => {
         return (<UserPageOrdersClick key={order.id}order={order} history={this.props.history} getOrders={this.getOrders}/>)
       })}</ul>

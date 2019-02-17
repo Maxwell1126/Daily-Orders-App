@@ -15,14 +15,20 @@ router.post('/', (req, res) => {
                                  AND "order_id" = $1;`;
                 let values = [req.body.id]
                 let response = await client.query(queryText, values)
-                //console.log('response 37: ', response);
+                console.log('response 18: ', response.rows.length);
+                console.log('rewq body19 ',req.body.order_id);
+                
+                if (response.rows.length == 0) {
+                    queryText = `SELECT "person_id" FROM "order" 
+                    WHERE "id" =$1;`;
+                    values = [req.body.id]
+                    response = await client.query(queryText, values)
 
-                if (response.rows.length === 0) {
                     queryText = `INSERT INTO "fulfillment"
                                          ("order_id","person_id")
                                          VALUES($1,$2)
                                          RETURNING "id";`;
-                    values = [req.body.id, req.body.person]
+                    values = [req.body.id, response.rows[0]]
                     //let values = [req.body.id, req.body.person];
                     console.log('wreck body person: ', req.body.person);
                     console.log('wreck body id: ', req.body.id);

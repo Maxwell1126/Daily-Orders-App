@@ -23,13 +23,13 @@ class UserPageOrders extends Component {
     toOrderSheet = (event) => {
         axios({
             method:'POST',
-            url:'/api/dashboard',
+            url:'/api/dashboardPost',
             data:{
-                id:this.props.order.id,
+                id:this.props.order.order_id,
                 person:this.props.user.id
             }
         }).then((response)=>{
-            this.props.history.push(`/home/${this.props.order.id}`)
+            this.props.history.push(`/home/${this.props.order.order_id}`)
         })
     }
     // this could also be written with destructuring parameters as:
@@ -41,10 +41,12 @@ class UserPageOrders extends Component {
         let orderContent;
         if(this.props.user.manager==true){
             orderContent = <li onClick={this.toOrderSheet}>
+                {/* {JSON.stringify(this.props.order)} */}
                             {this.props.order.order_name}
                             {this.props.order.username}</li>
         }else{
             orderContent = <li onClick={this.toOrderSheet}>
+                {JSON.stringify(this.props.order)}
                             {this.props.order.order_name}</li>
         }
         return (orderContent)

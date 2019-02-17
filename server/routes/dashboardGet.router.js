@@ -10,8 +10,15 @@ router.post('/', (req, res) => {
             try {
                 await client.query('BEGIN');
                 if (req.user.manager === false) {
-                    let queryText = `SELECT * FROM "order" 
-                    WHERE "person_id" =$1;`;
+                    let queryText = `SELECT "fulfillment".*, "order"."order_name",
+                        "person"."username"
+                    FROM "fulfillment"
+                    JOIN "order" ON "order"."id" =
+                        "fulfillment"."order_id"
+                    JOIN "person" ON "person"."id" =
+                        "fulfillment"."person_id"
+                    WHERE "date" = CURRENT_DATE
+                    AND "fulfillment"."person_id" = $1;`;
                     let values = [req.user.id];
                     let results = await client.query(queryText, values)
                     await client.query('COMMIT');
@@ -64,7 +71,7 @@ router.post('/', (req, res) => {
                                  "fulfillment"."order_id"
                                  JOIN "person" ON "person"."id" =
                                  "fulfillment"."person_id"
-                                 WHERE "date" = CURRENT_DATE;`
+                                 WHERE "date" = CURRENT_DATE;`;
                     results = await client.query(queryText);
                     await client.query('COMMIT');
                     res.send(results.rows)
