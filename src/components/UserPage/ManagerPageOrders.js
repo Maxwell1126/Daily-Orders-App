@@ -23,10 +23,6 @@ class ManagerPageOrders extends Component {
     toOrderSheet = (event) => {
         this.props.history.push('/home:/id')
     }
-
-    toHistory = (event) => {
-        this.props.history.push('/history')
-    }
     // this could also be written with destructuring parameters as:
     // const UserPage = ({ user }) => (
     // and then instead of `props.user.username` you could use `user.username`
@@ -38,7 +34,6 @@ class ManagerPageOrders extends Component {
                 <ul>{this.props.reduxStore.orders.map((order) => {
                     return (<UserPageOrdersClick key={order.id} order={order} history={this.props.history} getOrders={this.getOrders} />)
                 })}</ul>
-                <button onClick={this.toHistory}>History</button>
             </div>
         )
     }
