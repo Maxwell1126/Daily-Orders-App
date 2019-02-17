@@ -2,6 +2,7 @@ import React , {Component} from 'react';
 import { connect } from 'react-redux';
 import LogOutButton from '../LogOutButton/LogOutButton';
 import UserPageOrders from './UserPageOrders';
+import ManagerPageOrders from './ManagerPageOrders';
 class UserPage extends Component {
 
 // this could also be written with destructuring parameters as:
@@ -10,15 +11,27 @@ class UserPage extends Component {
 // this.render
 // 
 render(){
+  let userPageContent;
+  if (this.props.user.manager===false){
+    userPageContent = 
+    <div> 
+      <p>Your Orders:</p>
+      <UserPageOrders history={this.props.history} />
+    </div>
+  }else{
+    userPageContent =
+    <div>
+      <ManagerPageOrders history={this.props.history} />
+    </div>
+  }
   return(
     <div>
-      
+      {JSON.stringify(this.props.user.manager)}
      <h1 id="welcome">
        Welcome, { this.props.user.username }!
      </h1>
      {/* <p>{JSON.stringify(this.props)}</p> */}
-      <p>Your Orders:</p>
-      <UserPageOrders history={this.props.history}/>
+     {userPageContent}
       <br></br>
      <LogOutButton className="log-in" />
    </div>
