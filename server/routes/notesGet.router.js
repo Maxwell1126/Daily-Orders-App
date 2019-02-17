@@ -28,10 +28,10 @@ router.post('/', (req, res) => {
                 WHERE "note_fulfillment"."fulfillment_id" = $1
                 ORDER BY "note"."id";`
                 values = [responseId]
-                console.log('values 31', values);
+                //console.log('values 31', values);
                 
                 let results = await client.query(queryText, values)
-                console.log('resultsrow 34',results);
+                //console.log('resultsrow 34',results);
                 
                 await client.query('COMMIT');
                 res.send(results.rows)

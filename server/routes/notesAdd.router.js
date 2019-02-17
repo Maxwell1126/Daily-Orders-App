@@ -20,7 +20,7 @@ router.post('/', (req, res) => {
                 queryText = `INSERT INTO "note"("note_entry")
                              VALUES($1) RETURNING "id";`;
                 values = [req.body.note]
-                console.log('values 23 add',values);
+                //console.log('values 23 add',values);
                 
                 let results = await client.query(queryText, values)
                 let noteId = results.rows[0].id

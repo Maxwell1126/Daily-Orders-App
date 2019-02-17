@@ -4,8 +4,8 @@ import LogOutButton from '../LogOutButton/LogOutButton';
 import axios from 'axios';
 import OrderSheetItem from './OrderSheetItem';
 const moment = require('moment');
-// moment().format();
-let myDate = moment().format('L');
+
+
 class OrderSheet extends Component {
     constructor(props) {
         super(props)
@@ -32,10 +32,20 @@ class OrderSheet extends Component {
         this.props.dispatch(action);
     }
     getProducts = (event) => {
-        axios.get(`api/ordersheet/${this.props.match.params.id}`).then(response => {
+        // console.log('in getproducts');
+        let orderDetails ={ 
+            id:this.props.match.params.id,
+            date:this.state.date,
+            person: this.props.reduxStore.user.id}
+        axios({
+            method:'POST',
+            url:'/api/ordersheet/',
+            data: orderDetails,
+        }).then((response) => {
+            // console.log('response.data order 45', response.data);
+            //console.log('the products array', this.state.products);
+             
             this.setState({
-                
-                ...this.state.products,
                 products: response.data,
             })
         })
@@ -50,7 +60,7 @@ class OrderSheet extends Component {
             url: '/api/notesGet',
             data: note,
         }).then((response) => {
-            console.log('response.data', response.data);
+            // console.log('response.data', response.data);
             this.setState({ 
                 notes:response.data
             })
@@ -145,18 +155,24 @@ class OrderSheet extends Component {
     }
   
     backDay = (event)=>{
-        console.log('in backDay', myDate);
+        console.log('in backDay', this.state.date);
         this.setState({
             date: moment(this.state.date).subtract(1, 'days').format('L'),
+        }, () => {
+            this.getProducts()
         });
         // myDate.subtract(1, 'days').format('L');
     }
 
     forwardDay = (event) => {
-        console.log('in forwardDay', myDate);
-        this.setState({
-            date: moment(this.state.date).add(1, 'days').format('L'),
+       this.setState({
+            date: moment(this.state.date).add(1, 'days').format('L'),   
+        }, ()=>{
+               this.getProducts()
         });
+        console.log('in forwardDay', this.state.date)
+        // this.getProducts();
+
         // myDate.subtract(1, 'days').format('L');
     }
 
@@ -167,8 +183,8 @@ class OrderSheet extends Component {
         }
         return (
             <div>
-                
-                {/* <p>{JSON.stringify(this.props)}</p> */}
+                {/* {console.log('the date',this.state.date)} */}
+                {/* <p>{JSON.stringify(this.props.reduxStore.user.id)}</p> */}
                 {/* {<p>{JSON.stringify(this.props.reduxStore.orders)}</p>} */}
                 {/* <p>{JSON.stringify(this.state.notes)}</p> */}
                 {/* <h1>{JSON.stringify(this.props.reduxStore.orders)}</h1> */}
