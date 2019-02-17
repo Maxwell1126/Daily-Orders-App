@@ -13,20 +13,22 @@ router.get('/:id', (req, res) => {
                 await client.query('BEGIN');
                 let queryText = `SELECT "id" FROM "fulfillment" 
                                  WHERE "date" = CURRENT_DATE
-                                 AND "order_id" = ${req.params.id};`;
-                let response = await client.query(queryText)
+                                 AND "order_id" = $1;`;
+                let values =[req.params.id]
+                let response = await client.query(queryText, values)
                 const responseId = response.rows[0].id
-                console.log('wreck params: ', req.params);
+                //console.log('wreck params: ', req.params);
                 
-                console.log('responseId:', responseId);
+                //console.log('responseId:', responseId);
                 
                 queryText = `SELECT "product"."id", "product"."product_name", 
                 "product_fulfillment"."quantity" FROM "product" 
                 JOIN "product_fulfillment" ON 
                 "product_fulfillment"."product_id" = "product"."id"
-                WHERE "product_fulfillment"."fulfillment_id" = ${responseId}
+                WHERE "product_fulfillment"."fulfillment_id" = $1
                 ORDER BY "product"."id";`
-                let results =await client.query(queryText)
+                values = [responseId]
+                let results =await client.query(queryText,values)
             
                 await client.query('COMMIT');
                 res.send(results.rows)
@@ -38,7 +40,7 @@ router.get('/:id', (req, res) => {
                 client.release();
             }
         })().catch((error) => {
-        console.log('error in dashboard post', error);
+        console.log('error in ordersheet post', error);
         res.sendStatus(500);
         })
     } else {
@@ -49,7 +51,7 @@ router.get('/:id', (req, res) => {
 
 router.put('/', (req, res) => {
     if (req.isAuthenticated) {
-        console.log('wreck body products: ', req.body.products);
+        console.log('wreck body button: ', req.body.button);
         
         (async () => {
             const client = await pool.connect();
@@ -94,10 +96,10 @@ router.put('/', (req, res) => {
                              WHERE "id" = $1;`
                 value = [responseId]
                 await client.query(queryText, value)
-                }else{
+                }
                 
                 await client.query('COMMIT');
-                res.sendStatus(201)}
+                res.sendStatus(201)
             }catch (e) {
                 console.log('ROLLBACK', e);
                 await client.query('ROLLBACK');

@@ -5,7 +5,7 @@ function* getNotes(action) {
     try {
         console.log('in getNotes: ', action.payload);
 
-        let response = yield axios.get(`/api/notes/${action.payload}`)
+        let response = yield axios.post('/api/notesGet/')
         const notes = { type: 'SET_NOTES', payload: response.data }
         yield put(notes)
     } catch (error) {

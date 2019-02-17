@@ -10,7 +10,6 @@ class UserPageOrders extends Component {
     componentDidMount() {
         this.props.getOrders();
     }
-
     // toOrderSheet = (event) => {
     //     let data= {
     //         id: this.props.order.id,
