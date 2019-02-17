@@ -1,6 +1,10 @@
+--1.Create a database named: order_writer_app
+--2.Navigate into this database and then run the queries below.
+
 --Needed tables for the project.
 CREATE TABLE "person" ("id" SERIAL PRIMARY KEY, 
-"username" VARCHAR(80) UNIQUE NOT NULL, "password" VARCHAR(1000));
+"username" VARCHAR(80) UNIQUE NOT NULL, "password" VARCHAR(1000), 
+"manager" BOOLEAN DEFAULT FALSE);
 
 CREATE TABLE "type" ("id" SERIAL PRIMARY KEY, "type_name" VARCHAR(40));
 
