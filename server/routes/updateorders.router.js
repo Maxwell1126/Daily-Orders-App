@@ -17,8 +17,8 @@ router.post('/products', (req, res) => {
         let values = [req.body.id]
         pool.query(queryText, values).then((results) => {
             res.send(results.rows)
-        }).catch((err) => {
-            console.log('error in post', err);
+        }).catch((error) => {
+            console.log('error in updateorders postProducts', error);
             res.sendStatus(500);
         });
     } else {
@@ -32,8 +32,8 @@ router.get('/', (req, res) => {
         let queryText = `SELECT "id","username" FROM "person"
                          WHERE "manager"=false;`;
         pool.query(queryText).then((results) => { res.send(results.rows); })
-            .catch((err) => {
-                console.log('error in post', err);
+            .catch((error) => {
+                console.log('error in updateorders get', error);
                 res.sendStatus(500);
             });
     } else {
@@ -68,7 +68,7 @@ router.post('/add',(req,res)=>{
                 client.release();
             }
         })().catch((error) => {
-            console.log('error in dashboard post', error);
+            console.log('error in updateorders postAdd', error);
             res.sendStatus(500);
         })
     }else{
@@ -105,6 +105,22 @@ router.delete('/:id', (req, res) => {
 })
     }else {
     res.sendStatus(403);
+    }
+});
+
+router.put('/',(req,res)=>{
+    if (req.isAuthenticated) {
+        let queryText=`UPDATE "order" SET "person_id"=$1
+                        WHERE "id"=$2;`;
+        values=[req.body.id,req.body.orderId];
+        pool.query(queryText,values).then((response)=>{
+            res.sendStatus(201);
+        }).catch((error) => {
+            console.log('error in updateorders put', error);
+            res.sendStatus(500);
+        })
+    } else {
+        res.sendStatus(403);
     }
 });
 

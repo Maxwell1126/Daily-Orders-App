@@ -86,6 +86,20 @@ class UpdateOrders extends Component {
         })
     }
 
+    updateWriter = (event) =>{
+        let writer = {id:this.state.writer,
+                        orderId:this.state.selectedOrder}
+        axios({
+            method:'PUT',
+            url:'/api/updateorders',
+            data: writer,
+        }).then((response)=>{
+            this.getProducts();
+        }).catch((error)=>{
+            console.log('error in updateWriter', error);           
+        })
+    }
+
     setProduct = (event) =>{
         this.setState({
             ...this.state.product, product: event.target.value
@@ -111,12 +125,13 @@ class UpdateOrders extends Component {
         let orderHeader;
         let addProductContent;
         if (this.state.selectedOrder != null) { 
-            orderWriterContent = <select onChange={this.setWriter}>
+            orderWriterContent =<div><select onChange={this.setWriter}>
                 <option value='' disabled selected > Select a Crew Member</option>
                 {this.state.people.map((person) => {
                     return (<option value={person.id}>{person.username}</option>)
                 })}
             </select>
+            <button onClick={this.updateWriter}>Update Writer</button></div> 
 
             orderHeader = <h1>Update Order: {this.state.orders.map((order) => {
                 if (order.order_id == this.state.selectedOrder) {
