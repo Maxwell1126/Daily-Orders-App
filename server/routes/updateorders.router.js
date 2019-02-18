@@ -41,7 +41,7 @@ router.get('/', (req, res) => {
     }
 });
 
-router.post('/add',(req,res)=>{
+router.post('/add', (req, res) => {
     if (req.isAuthenticated) {
         (async () => {
             const client = await pool.connect();
@@ -55,7 +55,7 @@ router.post('/add',(req,res)=>{
 
                 queryText = `INSERT INTO "order_product"("product_id","order_id")
                             VALUES($1,$2);`;
-                values = [resultsId,req.body.id];
+                values = [resultsId, req.body.id];
                 results = await client.query(queryText, values);
 
                 await client.query('COMMIT');
@@ -71,7 +71,7 @@ router.post('/add',(req,res)=>{
             console.log('error in updateorders postAdd', error);
             res.sendStatus(500);
         })
-    }else{
+    } else {
         res.sendStatus(403);
     }
 })
@@ -86,9 +86,9 @@ router.delete('/:id', (req, res) => {
                 let values = [req.params.id];
                 let results = await client.query(queryText, values);
 
-                queryText=`DELETE FROM "product" WHERE "id" =$1;`;
+                queryText = `DELETE FROM "product" WHERE "id" =$1;`;
                 values = [req.params.id];
-                results = await client.query(queryText,values);
+                results = await client.query(queryText, values);
                 await client.query('COMMIT');
                 res.sendStatus(201)
             } catch (e) {
@@ -98,27 +98,54 @@ router.delete('/:id', (req, res) => {
             } finally {
                 client.release();
             }
-        
-})().catch((error) => {
-    console.log('Error', error);
-    res.sendStatus(500);
-})
-    }else {
-    res.sendStatus(403);
+
+        })().catch((error) => {
+            console.log('Error', error);
+            res.sendStatus(500);
+        })
+    } else {
+        res.sendStatus(403);
     }
 });
 
-router.put('/',(req,res)=>{
+router.put('/', (req, res) => {
     if (req.isAuthenticated) {
-        let queryText=`UPDATE "order" SET "person_id"=$1
+        (async () => {
+            const client = await pool.connect();
+            try {
+                await client.query('BEGIN');
+                let queryText = `UPDATE "order" SET "person_id"=$1
                         WHERE "id"=$2;`;
-        values=[req.body.id,req.body.orderId];
-        pool.query(queryText,values).then((response)=>{
-            res.sendStatus(201);
-        }).catch((error) => {
-            console.log('error in updateorders put', error);
-            res.sendStatus(500);
-        })
+                let values = [req.body.id, req.body.orderId];
+                let results = await client.query(queryText, values);
+
+                queryText = `SELECT "fulfillment".* FROM "fulfillment"
+                             JOIN "order" ON "order"."id" = "fulfillment"."order_id"
+                             WHERE "fulfillment"."date" = CURRENT_DATE
+                             AND "fulfillment"."order_id" = $1
+                             GROUP BY "fulfillment"."id";`;
+                values = [req.body.orderId]
+                results = await client.query(queryText,values);
+                let resultsId = results.rows[0].id
+
+                queryText = `UPDATE "fulfillment" SET "person_id" = $1
+                             WHERE "id" =$2;`
+                values = [req.body.id,resultsId];
+                results = await client.query(queryText,values);
+
+                await client.query('COMMIT');
+                res.sendStatus(201)
+            } catch (e) {
+                console.log('ROLLBACK', e);
+                await client.query('ROLLBACK');
+                throw e;
+            } finally {
+                client.release();
+            }
+        })().catch((error) => {
+                    console.log('error in updateorders put', error);
+                    res.sendStatus(500);
+                })
     } else {
         res.sendStatus(403);
     }

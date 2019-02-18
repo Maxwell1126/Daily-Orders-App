@@ -23,6 +23,7 @@ router.post('/', (req, res) => {
                     ORDER BY "order"."id";`;
                     let values = [req.body.id];
                     let results = await client.query(queryText, values)
+
                     await client.query('COMMIT');
                     res.send(results.rows)
                 } else {
