@@ -4,7 +4,6 @@ import registrationSaga from './registrationSaga';
 import userSaga from './userSaga';
 import ordersSaga from './ordersSaga';
 import historySaga from './historySaga';
-import ordersheetSaga from './ordersheetSaga';
 import productsSaga from './historySaga';
 import notesSaga from './notesSaga';
 // rootSaga is the primary saga.
@@ -18,7 +17,6 @@ export default function* rootSaga() {
   yield all([
     notesSaga(),
     productsSaga(),
-    ordersheetSaga(),
     historySaga(),
     ordersSaga(),
     loginSaga(),

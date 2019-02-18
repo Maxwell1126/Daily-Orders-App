@@ -4,7 +4,6 @@ import loginMode from './loginModeReducer';
 import user from './userReducer';
 import orders from './ordersReducer';
 import products from './productsReducer';
-import ordersheet from './ordersheetReducer';
 import notes from './notesReducer';
 // rootReducer is the primary reducer for our entire project
 // It bundles up all of the other reducers so our project can use them.
@@ -15,7 +14,6 @@ import notes from './notesReducer';
 const rootReducer = combineReducers({
   notes,
   orders,
-  ordersheet,
   products,
   errors, // contains registrationMessage and loginMessage
   loginMode, // will have a value of 'login' or 'registration' to control which screen is shown

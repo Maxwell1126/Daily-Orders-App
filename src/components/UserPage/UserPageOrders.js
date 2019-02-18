@@ -1,11 +1,15 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import UserPageOrdersClick from './UserPageOrdersClick';
+import axios from 'axios';
 const moment = require('moment');
 moment().format();
 class UserPageOrders extends Component {
     constructor(props) {
         super(props)
+        this.state={
+            orders:[],
+        }
     }
 
     componentDidMount() {
@@ -13,8 +17,21 @@ class UserPageOrders extends Component {
     }
 
     getOrders = () => {
-        const action = { type: 'GET_ORDERS' };
-        this.props.dispatch(action);
+        console.log('in get orders');
+        
+        let userId = { id:this.props.reduxStore.user.id}
+        axios({
+            method:'POST',
+            url:'/api/dashboardGet',
+            data: userId,
+        }).then((response)=>{
+            this.setState({
+                orders: response.data
+            })
+        })
+        
+        // const action = { type: 'GET_ORDERS', payload:id};
+        // this.props.dispatch(action);
     }
 
     toOrderSheet = (event) => {
@@ -28,8 +45,8 @@ class UserPageOrders extends Component {
     render() {
         return (
             <div>
-                
-                <ul>{this.props.reduxStore.orders.map((order) => {
+                {/* {JSON.stringify(this.props.reduxStore)} */}
+                <ul>{this.state.orders.map((order) => {
         return (<UserPageOrdersClick key={order.id}order={order} history={this.props.history} getOrders={this.getOrders}/>)
       })}</ul>
             </div>

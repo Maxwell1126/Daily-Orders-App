@@ -5,11 +5,14 @@ const router = express.Router();
 router.post('/', (req, res) => {
 
     if (req.isAuthenticated()) {
+        console.log('WREK 8!!!!', req.body.data);
+        
         (async () => {
             const client = await pool.connect();
             try {
                 await client.query('BEGIN');
                 if (req.user.manager === false) {
+
                     let queryText = `SELECT "fulfillment".*, "order"."order_name",
                         "person"."username"
                     FROM "fulfillment"
@@ -19,7 +22,7 @@ router.post('/', (req, res) => {
                         "fulfillment"."person_id"
                     WHERE "date" = CURRENT_DATE
                     AND "fulfillment"."person_id" = $1;`;
-                    let values = [req.user.id];
+                    let values = [req.body.id];
                     let results = await client.query(queryText, values)
                     await client.query('COMMIT');
                     res.send(results.rows)

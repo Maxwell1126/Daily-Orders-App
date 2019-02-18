@@ -11,9 +11,9 @@ router.post('/', (req, res) => {
             try {
                 await client.query('BEGIN');
                 let queryText = `SELECT * FROM "fulfillment" 
-                                 WHERE "date" = CURRENT_DATE
-                                 AND "order_id" = $1;`;
-                let values = [req.body.id]
+                                 WHERE "date" = $1
+                                 AND "order_id" = $2;`;
+                let values = [req.body.date,req.body.id]
                 let response = await client.query(queryText, values)
                 console.log('response 18: ', response.rows.length);
                 console.log('rewq body19 ',req.body.order_id);

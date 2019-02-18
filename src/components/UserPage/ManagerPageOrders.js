@@ -28,7 +28,7 @@ class ManagerPageOrders extends Component {
     render() {
         return (
             <div>
-                {JSON.stringify(this.props.reduxStore.orders)}
+                {/* {JSON.stringify(this.props.reduxStore.orders)} */}
                 <ul>Order's Pending Apporoval
                 {this.props.reduxStore.orders.map((order) => {
                     if(order.status_id == 2){

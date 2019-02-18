@@ -1,24 +1,18 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-// import OrderSheet from '../OrderSheet/OrderSheet';
 import axios from 'axios';
 const moment = require('moment');
-moment().format();
 
 class UserPageOrders extends Component {
-
+constructor(){
+super()
+this.state={
+    date: moment().format('L'),
+}
+}
     componentDidMount() {
         this.props.getOrders();
     }
-    // toOrderSheet = (event) => {
-    //     let data= {
-    //         id: this.props.order.id,
-    //             person: this.props.user.id
-    //     }
-    //     const action = { type: 'POST_ORDERSHEET', payload: data }
-    //     this.props.dispatch(action);
-    //     this.props.history.push(`/home/${this.props.order.id}`);
-    // }
 
     toOrderSheet = (event) => {
         axios({
@@ -26,7 +20,8 @@ class UserPageOrders extends Component {
             url:'/api/dashboardPost',
             data:{
                 id:this.props.order.order_id,
-                person:this.props.user.id
+                person:this.props.order.person_id,
+                date:this.state.date,
             }
         }).then((response)=>{
             this.props.history.push(`/home/${this.props.order.order_id}`)
@@ -38,15 +33,18 @@ class UserPageOrders extends Component {
     // this.render
     // 
     render() {
+        
         let orderContent;
         if(this.props.user.manager==true){
             orderContent = <li onClick={this.toOrderSheet}>
+                {/* {JSON.stringify(this.props)} */}
                 {/* {JSON.stringify(this.props.order)} */}
                             {this.props.order.order_name}
                             {this.props.order.username}</li>
         }else{
             orderContent = <li onClick={this.toOrderSheet}>
-                {JSON.stringify(this.props.order)}
+                {/* {JSON.stringify(this.props)} */}
+                {/* {JSON.stringify(this.props.order)} */}
                             {this.props.order.order_name}</li>
         }
         return (orderContent)

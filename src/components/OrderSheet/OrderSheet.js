@@ -12,8 +12,9 @@ class OrderSheet extends Component {
         this.state = {
             products: [],
             notes: [],
-            note:'',
+            note: '',
             date: moment().format('L'),
+            orders:[],
         }
     }
 
@@ -22,29 +23,43 @@ class OrderSheet extends Component {
         this.getNotes();
         this.getOrders();
     }
-    
+
     // getProducts = () => {
     //     const action = { type: 'GET_PRODUCTS' };
     //     this.props.dispatch(action);
     // }
     getOrders = () => {
-        const action = { type: 'GET_ORDERS' };
-        this.props.dispatch(action);
+        console.log('in get orders');
+
+        let userId = { id: this.props.reduxStore.user.id }
+        axios({
+            method: 'POST',
+            url: '/api/dashboardGet',
+            data: userId,
+        }).then((response) => {
+            this.setState({
+                orders: response.data
+            })
+        })
+
+        // const action = { type: 'GET_ORDERS', payload:id};
+        // this.props.dispatch(action);
     }
     getProducts = (event) => {
         // console.log('in getproducts');
-        let orderDetails ={ 
-            id:this.props.match.params.id,
-            date:this.state.date,
-            person: this.props.reduxStore.user.id}
+        let orderDetails = {
+            id: this.props.match.params.id,
+            date: this.state.date,
+            person: this.props.reduxStore.user.id
+        }
         axios({
-            method:'POST',
-            url:'/api/ordersheet/',
+            method: 'POST',
+            url: '/api/ordersheet/',
             data: orderDetails,
         }).then((response) => {
             // console.log('response.data order 45', response.data);
             //console.log('the products array', this.state.products);
-             
+
             this.setState({
                 products: response.data,
             })
@@ -61,9 +76,27 @@ class OrderSheet extends Component {
             data: note,
         }).then((response) => {
             // console.log('response.data', response.data);
-            this.setState({ 
-                notes:response.data
+            this.setState({
+                notes: response.data
             })
+        })
+    }
+    approveOrder = (event) => {
+        let products = {
+            products: this.state.products,
+            id: this.props.match.params.id,
+            date: this.state.date,
+            button: 'approve',
+        }
+        axios({
+            method: 'PUT',
+            url: '/api/ordersheet',
+            data: products,
+        }).then((response) => {
+            this.getProducts();
+        }).catch((error) => {
+            console.log('error on client putting orders', error);
+
         })
     }
 
@@ -86,28 +119,28 @@ class OrderSheet extends Component {
         })
     }
 
-    submitOrder = (event) =>{
-        let products={
-            products:this.state.products,
-            id:this.props.match.params.id,
-            date:this.state.date,
+    submitOrder = (event) => {
+        let products = {
+            products: this.state.products,
+            id: this.props.match.params.id,
+            date: this.state.date,
             button: 'submit',
         }
         axios({
-            method:'PUT',
+            method: 'PUT',
             url: '/api/ordersheet',
-            data:products,
-        }).then((response) =>{
+            data: products,
+        }).then((response) => {
             this.getProducts();
-        }).catch((error)=>{
+        }).catch((error) => {
             console.log('error on client putting orders', error);
-            
+
         })
     }
 
     setNote = (event) => {
-        console.log('note:',this.state.note.note);
-        
+        console.log('note:', this.state.note.note);
+
         this.setState({
             note: {
                 ...this.state.notes,
@@ -116,16 +149,17 @@ class OrderSheet extends Component {
         })
     }
 
-    addNote = (event) =>{
-        let note={
+    addNote = (event) => {
+        let note = {
             id: this.props.match.params.id,
             note: this.state.note.note,
-            date: this.state.date,}
+            date: this.state.date,
+        }
         axios({
-            method:'POST',
-            url:'/api/notesAdd',
+            method: 'POST',
+            url: '/api/notesAdd',
             data: note,
-        }).then((response)=>{
+        }).then((response) => {
             this.getNotes()
         })
     }
@@ -138,26 +172,26 @@ class OrderSheet extends Component {
         //Credit for this function belongs to Dereje1 from this link:
         //https://www.freecodecamp.org/forum/t/reactjs-using-setstate-to-update-a-single-property-on-an-object/146772
         let productsCopy = JSON.parse(JSON.stringify(this.state.products))
-        productsCopy[i].quantity ++;
-            this.setState({
-                products: productsCopy
-            })
-        }
-
-    downQuantity = (i) => {
-        //Credit for this function belongs to Dereje1 from this link:
-        //https://www.freecodecamp.org/forum/t/reactjs-using-setstate-to-update-a-single-property-on-an-object/146772
-        if(this.state.products[i].quantity!==0){
-        let productsCopy = JSON.parse(JSON.stringify(this.state.products))
-        productsCopy[i].quantity--;
+        productsCopy[i].quantity++;
         this.setState({
             products: productsCopy
         })
     }
+
+    downQuantity = (i) => {
+        //Credit for this function belongs to Dereje1 from this link:
+        //https://www.freecodecamp.org/forum/t/reactjs-using-setstate-to-update-a-single-property-on-an-object/146772
+        if (this.state.products[i].quantity !== 0) {
+            let productsCopy = JSON.parse(JSON.stringify(this.state.products))
+            productsCopy[i].quantity--;
+            this.setState({
+                products: productsCopy
+            })
+        }
     }
-  
-    backDay = (event)=>{
-        
+
+    backDay = (event) => {
+
         this.setState({
             date: moment(this.state.date).subtract(1, 'days').format('L'),
         }, () => {
@@ -168,11 +202,11 @@ class OrderSheet extends Component {
     }
 
     forwardDay = (event) => {
-       this.setState({
-            date: moment(this.state.date).add(1, 'days').format('L'),   
-        }, ()=>{
-               this.getProducts()
-               this.getNotes()
+        this.setState({
+            date: moment(this.state.date).add(1, 'days').format('L'),
+        }, () => {
+            this.getProducts()
+            this.getNotes()
         });
         console.log('in forwardDay', this.state.date)
         // this.getProducts();
@@ -193,21 +227,36 @@ class OrderSheet extends Component {
         }
         let addNoteContent;
         let buttons;
-            if (currentDate <=this.state.date) {
-                addNoteContent = <div><h3>Add Notes:</h3>
-                    <textarea onChange={this.setNote}></textarea>
-                    <button onClick={this.addNote}>Add Note</button></div>
-                buttons = <div><button id="save" onClick={this.saveOrder}>Save</button>
-                    <button id="submit" onClick={this.submitOrder}>Submit</button></div>
-            }
+        let statusId;
+        (this.state.products.map((product) => {
+                statusId=product.status_id
+                return (product.status_id)
+        }))
+        if (currentDate <= this.state.date && statusId < 3
+            && this.props.reduxStore.user.manager == false) {
+            addNoteContent = <div><h3>Add Notes:</h3>
+                <textarea onChange={this.setNote}></textarea>
+                <button onClick={this.addNote}>Add Note</button></div>
+            buttons = <div><button id="save" onClick={this.saveOrder}>Save</button>
+                <button id="submit" onClick={this.submitOrder}>Submit</button></div>
+        } else if (currentDate <= this.state.date &&
+            this.props.reduxStore.user.manager == true) {
+            addNoteContent = <div><h3>Add Notes:</h3>
+                <textarea onChange={this.setNote}></textarea>
+                <button onClick={this.addNote}>Add Note</button></div>
+            buttons = <div><button id="save" onClick={this.saveOrder}>Save</button>
+                <button id="submit" onClick={this.approveOrder}>Approve</button></div>
+        }
+
+
         return (
             <div>
                 {/* {console.log('the date',this.state.date)} */}
-                {/* <p>{JSON.stringify(this.props.reduxStore.user.id)}</p> */}
-                {/* {<p>{JSON.stringify(this.props.reduxStore.orders)}</p>} */}
+                {/* <p>{JSON.stringify(this.props.reduxStore.orders)}</p> */}
+                {<p>{JSON.stringify(this.props.reduxStore.user.manager)}</p>}
                 {/* <p>{JSON.stringify(this.state.notes)}</p> */}
-                {/* <h1>{JSON.stringify(this.props.reduxStore.orders)}</h1> */}
-                {this.props.reduxStore.orders.map((order) => {
+                {JSON.stringify(statusId)}
+                {this.state.orders.map((order) => {
                     if (order.id == this.props.match.params.id) {
                         return (<h1>{order.order_name}</h1>)
                     }
@@ -220,6 +269,8 @@ class OrderSheet extends Component {
                 <div>{this.state.products.map((product, i) => {
                     //console.log('product',product);
                     return (<OrderSheetItem
+                        manager={this.props.reduxStore.user.manager}
+                        statusId={statusId}
                         currentDate={currentDate}
                         date={this.state.date}
                         history={this.props.history}
@@ -227,7 +278,7 @@ class OrderSheet extends Component {
                         i={i}
                         upQuantity={this.upQuantity}
                         downQuantity={this.downQuantity}
-                        getProducts={this.getProducts}/>)
+                        getProducts={this.getProducts} />)
                 })}</div>
                 {buttons}
                 <br></br>

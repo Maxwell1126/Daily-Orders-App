@@ -66,9 +66,10 @@ router.post('/', (req, res) => {
                 }else{
                     const responseId = response.rows[0].id
                     queryText = `SELECT "product"."id", "product"."product_name", 
-                "product_fulfillment"."quantity" FROM "product" 
+                "product_fulfillment"."quantity", "fulfillment"."status_id" FROM "product" 
                 JOIN "product_fulfillment" ON 
                 "product_fulfillment"."product_id" = "product"."id"
+                JOIN "fulfillment" ON "fulfillment"."id" = "product_fulfillment"."fulfillment_id"
                 WHERE "product_fulfillment"."fulfillment_id" = $1
                 ORDER BY "product"."id";`
                     values = [responseId]
@@ -141,6 +142,12 @@ router.put('/', (req, res) => {
                              WHERE "id" = $1;`
                 value = [responseId]
                 await client.query(queryText, value)
+                } else if (req.body.button === 'approve'){
+                    queryText = `UPDATE "fulfillment"
+                             SET "status_id" =4
+                             WHERE "id" = $1;`
+                    value = [responseId]
+                    await client.query(queryText, value)
                 }
                 
                 await client.query('COMMIT');
