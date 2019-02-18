@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 import LogOutButton from '../LogOutButton/LogOutButton';
 import axios from 'axios';
 let orderHeader;
-let dateHeader;
 
 class UpdateOrders extends Component {
 
@@ -11,63 +10,89 @@ class UpdateOrders extends Component {
         super()
         this.state = {
             orders: [],
-            order: null,
+            selectedOrder: null,
             products: [],
+            people: [],
         }
     }
 
     componentDidMount() {
         this.getOrders();
+        this.getPerson();
     }
 
     getOrders = () => {
-        const action = { type: 'GET_ORDERS' };
-        this.props.dispatch(action);
+        console.log('in get orders');
+
+        let userId = { id: this.props.reduxStore.user.id }
+        axios({
+            method: 'POST',
+            url: '/api/dashboardGet',
+            data: userId,
+        }).then((response) => {
+            this.setState({
+                orders: response.data
+            })
+        })
+
+        // const action = { type: 'GET_ORDERS', payload:id};
+        // this.props.dispatch(action);
     }
 
-    getHistory = (event) => {
-        const action = { type: 'POST_HISTORY', payload: this.state.historyQuery }
-        this.props.dispatch(action)
-        this.getNotes();
-        orderHeader = <h3>{
-            this.props.reduxStore.orders.map((order) => {
-                if (order.id == this.state.historyQuery.order) {
-                    return (order.order_name)
-                }
-            })}</h3>
-        dateHeader = <h3>{this.state.historyQuery.date}</h3>
-
+    getPerson = (event)=>{
+        axios({
+            method:'GET',
+            url:'/api/updateorders',
+        }).then((response)=>{
+            this.setState({
+                people:response.data
+            })
+        })
     }
 
     setOrder = (event) => {
         this.setState({
-            ...this.state.order, order: event.target.value,
+            ...this.state.selectedOrder, selectedOrder: event.target.value,
         })
-        console.log('order', this.state.order);
     }
 
     render() {
+        orderHeader = <h3>{
+            this.state.orders.map((order) => {
+                if (order.order_id == this.state.order) {
+                    return (order.order_name)
+                }
+            })}</h3>
+        let orderWriterContent;
+        if (this.state.selectedOrder != null) {
+            orderWriterContent = <select onChange={this.setOrder}>
+                <option value='' disabled selected > Select a Crew Member</option>
+                {this.state.people.map((person) => {
+                    return (<option value={person.id}>{person.username}</option>)
+                })}
+            </select>
+        }
         return (
             <div>
                 <h1>Update Orders</h1>
-                
-                
+
+                {JSON.stringify(this.state.orders)}
                 {/* <p>{JSON.stringify(this.state.historyQuery)}</p>
                 <p>{JSON.stringify(this.state.products)}</p> */}
                 {/* <p>{JSON.stringify(this.props.reduxStore.products)}</p> */}
                 <select onChange={this.setOrder}>
                     <option value="" disabled selected>Select an Order</option>
-                    {this.props.reduxStore.orders.map((order) => {
-                        return (<option value={order.id}>{order.order_name}</option>)
+                    {this.state.orders.map((order) => {
+                        return (<option value={order.order_id}>{order.order_name}</option>)
                     })}
                 </select>
                 {/* <button onClick={this.getHistory}>Show history</button> */}
                 <br></br>
                 {orderHeader}
                 <br></br>
-
-                <div>{this.props.reduxStore.products.map((product) => {
-                    return <div>{product.product_name} {product.quantity}</div>
+                    {orderWriterContent}
+                <div>{this.state.products.map((product) => {
+                    return <div>{product.product_name}</div>
                 })}</div>
                 <br></br>
                 <LogOutButton className="log-in" />

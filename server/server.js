@@ -16,6 +16,7 @@ const ordersheetRouter = require('./routes/ordersheet.router');
 const historyRouter = require('./routes/history.router');
 const notesAddRouter = require('./routes/notesAdd.router');
 const notesGetRouter = require('./routes/notesGet.router');
+const updateordersRouter = require('./routes/updateorders.router');
 // Body parser middleware
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -29,12 +30,13 @@ app.use(passport.session());
 
 /* Routes */
 app.use('/api/user', userRouter);
-app.use('/api/dashboardPost', dashboardPostRouter)
-app.use('/api/dashboardGet', dashboardGetRouter)
-app.use('/api/ordersheet', ordersheetRouter)
-app.use('/api/history', historyRouter)
-app.use('/api/notesAdd', notesAddRouter)
-app.use('/api/notesGet', notesGetRouter)
+app.use('/api/dashboardPost', dashboardPostRouter);
+app.use('/api/dashboardGet', dashboardGetRouter);
+app.use('/api/ordersheet', ordersheetRouter);
+app.use('/api/history', historyRouter);
+app.use('/api/notesAdd', notesAddRouter);
+app.use('/api/notesGet', notesGetRouter);
+app.use('/api/updateorders', updateordersRouter);
 // Serve static files
 app.use(express.static('build'));
 
