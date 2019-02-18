@@ -28,6 +28,7 @@ class App extends Component {
   }
 
   render() {
+    
     return (
       <Router>
         <div>
@@ -61,11 +62,15 @@ class App extends Component {
               path="/history"
               component={History}
             />
-            <ProtectedRoute
-              exact
-              path="/update"
-              component={UpdateOrders}
-            />
+            {this.props.user.manager &&(
+              <ProtectedRoute
+                exact
+                path="/update"
+                component={UpdateOrders}
+              />
+            )}
+            
+            
             {/* This works the same as the other protected route, except that if the user is logged in,
             they will see the info page instead. */}
             <ProtectedRoute
@@ -81,5 +86,7 @@ class App extends Component {
       </Router>
   )}
 }
-
-export default connect()(App);
+const mapStateToProps = state => ({
+  user: state.user,
+});
+export default connect(mapStateToProps)(App);

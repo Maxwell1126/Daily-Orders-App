@@ -22,11 +22,17 @@ const Nav = (props) => (
           <Link className="nav-link" to="/history">
             History
           </Link>
-          <Link className="nav-link" to="/update">
-            Update Orders
-          </Link>
-          <LogOutButton className="nav-link"/>
+          
+         
         </>
+      )}
+      {props.user.manager &&(
+        <Link className="nav-link" to="/update">
+          Update Orders
+          </Link>
+      )}
+      {props.user.id && (
+        <LogOutButton className="nav-link" />
       )}
     </div>
   </div>
