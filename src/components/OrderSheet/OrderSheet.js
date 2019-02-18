@@ -195,7 +195,10 @@ class OrderSheet extends Component {
         this.setState({
             date: moment(this.state.date).subtract(1, 'days').format('L'),
         }, () => {
+            this.getOrders()
+        }, () => {
             this.getProducts()
+        }, () => {
             this.getNotes()
         });
         // myDate.subtract(1, 'days').format('L');
@@ -205,7 +208,10 @@ class OrderSheet extends Component {
         this.setState({
             date: moment(this.state.date).add(1, 'days').format('L'),
         }, () => {
+            this.getOrders()
+        }, () => {
             this.getProducts()
+        }, () => {
             this.getNotes()
         });
         console.log('in forwardDay', this.state.date)
