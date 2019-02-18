@@ -21,7 +21,8 @@ router.post('/', (req, res) => {
                     JOIN "person" ON "person"."id" =
                         "fulfillment"."person_id"
                     WHERE "date" = CURRENT_DATE
-                    AND "fulfillment"."person_id" = $1;`;
+                    AND "fulfillment"."person_id" = $1
+                    ORDER BY "order"."id";`;
                     let values = [req.body.id];
                     let results = await client.query(queryText, values)
                     await client.query('COMMIT');
@@ -74,7 +75,8 @@ router.post('/', (req, res) => {
                                  "fulfillment"."order_id"
                                  JOIN "person" ON "person"."id" =
                                  "fulfillment"."person_id"
-                                 WHERE "date" = CURRENT_DATE;`;
+                                 WHERE "date" = CURRENT_DATE
+                                 ORDER BY "order"."id";`;
                     results = await client.query(queryText);
                     await client.query('COMMIT');
                     res.send(results.rows)
