@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import LogOutButton from '../LogOutButton/LogOutButton';
+import UpdateOrdersProducts from './UpdateOrdersProducts';
 import axios from 'axios';
 
 class UpdateOrders extends Component {
@@ -157,10 +158,11 @@ class UpdateOrders extends Component {
                 <br></br>
                 {currentWriter}
                 <br></br>
-                <div>
+                <ul>
                 {this.state.products.map((product) => {
-                    return <div>{product.product_name}</div>
-                })}</div>
+                    return (<UpdateOrdersProducts 
+                    getProducts={this.getProducts} product={product}/>)
+                })}</ul>
                 {addProductContent}
                 <br></br>
                 <LogOutButton className="log-in" />

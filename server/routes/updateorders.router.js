@@ -76,4 +76,36 @@ router.post('/add',(req,res)=>{
     }
 })
 
+router.delete('/:id', (req, res) => {
+    if (req.isAuthenticated) {
+        (async () => {
+            const client = await pool.connect();
+            try {
+                await client.query('BEGIN');
+                let queryText = `DELETE FROM "order_product" WHERE "product_id"=$1`;
+                let values = [req.params.id];
+                let results = await client.query(queryText, values);
+
+                queryText=`DELETE FROM "product" WHERE "id" =$1;`;
+                values = [req.params.id];
+                results = await client.query(queryText,values);
+                await client.query('COMMIT');
+                res.sendStatus(201)
+            } catch (e) {
+                console.log('ROLLBACK', e);
+                await client.query('ROLLBACK');
+                throw e;
+            } finally {
+                client.release();
+            }
+        
+})().catch((error) => {
+    console.log('Error', error);
+    res.sendStatus(500);
+})
+    }else {
+    res.sendStatus(403);
+    }
+});
+
 module.exports = router;
