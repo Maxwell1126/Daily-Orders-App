@@ -34,6 +34,8 @@ class UpdateOrders extends Component {
             this.setState({
                 orders: response.data
             })
+        }).catch((error)=>{
+            console.log('error in getOrders',error);
         })
 
         // const action = { type: 'GET_ORDERS', payload:id};
@@ -48,6 +50,8 @@ class UpdateOrders extends Component {
             this.setState({
                 people:response.data
             })
+        }).catch((error)=>{
+            console.log('error in getPerson', error);    
         })
     }
 
@@ -55,12 +59,14 @@ class UpdateOrders extends Component {
         let orderId = {id:this.state.selectedOrder}
         axios({
             method: 'POST',
-            url: '/api/updateorders',
+            url: '/api/updateorders/products',
             data: orderId,
         }).then((response)=>{
             this.setState({
                 products:response.data
             })
+        }).catch((error)=>{
+            console.log('error in getProducts',error);   
         })
     }
 
@@ -69,8 +75,7 @@ class UpdateOrders extends Component {
             ...this.state.selectedOrder, selectedOrder: event.target.value,
         }, () => {
             this.getProducts()
-        }, ()=>{
-            
+        }, ()=>{    
         });
     }
 
@@ -90,11 +95,13 @@ class UpdateOrders extends Component {
         let productToAdd = {name:this.state.product,
                             id:this.state.selectedOrder}
         axios({
-            method:'PUT',
-            url:'/api/updateorders',
+            method:'POST',
+            url:'/api/updateorders/add',
             data:productToAdd
         }).then((response)=>{
             this.getProducts();
+        }).catch((error)=>{
+            console.log('error in addProduct',error);    
         })
     }
 

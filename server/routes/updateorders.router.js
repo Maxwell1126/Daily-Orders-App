@@ -5,7 +5,7 @@ const router = express.Router();
 /**
  * GET route template
  */
-router.post('/', (req, res) => {
+router.post('/products', (req, res) => {
     if (req.isAuthenticated) {
         let queryText = `SELECT "product"."product_name",
                         "product"."id", "person"."username"
@@ -41,11 +41,39 @@ router.get('/', (req, res) => {
     }
 });
 
-/**
- * POST route template
- */
-// router.post('/', (req, res) => {
+router.post('/add',(req,res)=>{
+    if (req.isAuthenticated) {
+        (async () => {
+            const client = await pool.connect();
+            try {
+                await client.query('BEGIN');
+                let queryText = `INSERT INTO "product"("product_name")
+                                VALUES($1) RETURNING "id";`;
+                let values = [req.body.name];
+                let results = await client.query(queryText, values);
+                const resultsId = results.rows[0].id
 
-// });
+                queryText = `INSERT INTO "order_product"("product_id","order_id")
+                            VALUES($1,$2);`;
+                values = [resultsId,req.body.id];
+                results = await client.query(queryText, values);
+
+                await client.query('COMMIT');
+                res.send(results.rows)
+            } catch (e) {
+                console.log('ROLLBACK', e);
+                await client.query('ROLLBACK');
+                throw e;
+            } finally {
+                client.release();
+            }
+        })().catch((error) => {
+            console.log('error in dashboard post', error);
+            res.sendStatus(500);
+        })
+    }else{
+        res.sendStatus(403);
+    }
+})
 
 module.exports = router;
