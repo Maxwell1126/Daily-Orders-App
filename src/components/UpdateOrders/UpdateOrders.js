@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import LogOutButton from '../LogOutButton/LogOutButton';
 import axios from 'axios';
-let orderHeader;
 
 class UpdateOrders extends Component {
 
@@ -13,6 +12,8 @@ class UpdateOrders extends Component {
             selectedOrder: null,
             products: [],
             people: [],
+            product:null,
+            writer:null,
         }
     }
 
@@ -50,33 +51,88 @@ class UpdateOrders extends Component {
         })
     }
 
+    getProducts = (event) =>{
+        let orderId = {id:this.state.selectedOrder}
+        axios({
+            method: 'POST',
+            url: '/api/updateorders',
+            data: orderId,
+        }).then((response)=>{
+            this.setState({
+                products:response.data
+            })
+        })
+    }
+
     setOrder = (event) => {
         this.setState({
             ...this.state.selectedOrder, selectedOrder: event.target.value,
+        }, () => {
+            this.getProducts()
+        }, ()=>{
+            
+        });
+    }
+
+    setWriter = (event)=>{
+        this.setState({
+            ...this.state.writer, writer:event.target.value,
+        })
+    }
+
+    setProduct = (event) =>{
+        this.setState({
+            ...this.state.product, product: event.target.value
+        })
+    }
+
+    addProduct = (event)=>{
+        let productToAdd = {name:this.state.product,
+                            id:this.state.selectedOrder}
+        axios({
+            method:'PUT',
+            url:'/api/updateorders',
+            data:productToAdd
+        }).then((response)=>{
+            this.getProducts();
         })
     }
 
     render() {
-        orderHeader = <h3>{
-            this.state.orders.map((order) => {
-                if (order.order_id == this.state.order) {
-                    return (order.order_name)
-                }
-            })}</h3>
         let orderWriterContent;
-        if (this.state.selectedOrder != null) {
-            orderWriterContent = <select onChange={this.setOrder}>
+        let orderHeader;
+        let addProductContent;
+        if (this.state.selectedOrder != null) { 
+            orderWriterContent = <select onChange={this.setWriter}>
                 <option value='' disabled selected > Select a Crew Member</option>
                 {this.state.people.map((person) => {
                     return (<option value={person.id}>{person.username}</option>)
                 })}
             </select>
+
+            orderHeader = <h1>Update Order: {this.state.orders.map((order) => {
+                if (order.order_id == this.state.selectedOrder) {
+                    return (order.order_name)
+                }
+            })}</h1>
+
+            addProductContent=
+                <div> <input type="text" placeholder="product name" 
+                        onChange={this.setProduct}/>
+                <button onClick={this.addProduct}>Add Product</button> </div>
+        }else{
+            orderHeader = <h1>Update Orders</h1>
+        }
+        let currentWriter;
+        if(this.state.products.length>0){
+            currentWriter = <h3>Current Writer: {this.state.products[0].username}</h3>
         }
         return (
             <div>
-                <h1>Update Orders</h1>
+                {orderHeader}
 
-                {JSON.stringify(this.state.orders)}
+                {/* {JSON.stringify(this.state.products)} */}
+                {/* {JSON.stringify(this.state.selectedOrder)} */}
                 {/* <p>{JSON.stringify(this.state.historyQuery)}</p>
                 <p>{JSON.stringify(this.state.products)}</p> */}
                 {/* <p>{JSON.stringify(this.props.reduxStore.products)}</p> */}
@@ -88,12 +144,17 @@ class UpdateOrders extends Component {
                 </select>
                 {/* <button onClick={this.getHistory}>Show history</button> */}
                 <br></br>
-                {orderHeader}
+                
                 <br></br>
-                    {orderWriterContent}
-                <div>{this.state.products.map((product) => {
+                {orderWriterContent}
+                <br></br>
+                {currentWriter}
+                <br></br>
+                <div>
+                {this.state.products.map((product) => {
                     return <div>{product.product_name}</div>
                 })}</div>
+                {addProductContent}
                 <br></br>
                 <LogOutButton className="log-in" />
             </div>
