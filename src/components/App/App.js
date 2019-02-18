@@ -19,6 +19,7 @@ import InfoPage from '../InfoPage/InfoPage';
 
 
 import './App.css';
+import UpdateOrders from '../UpdateOrders/UpdateOrders';
 import OrderSheet from '../OrderSheet/OrderSheet';
 import History from '../History/History';
 class App extends Component {
@@ -59,6 +60,11 @@ class App extends Component {
               exact
               path="/history"
               component={History}
+            />
+            <ProtectedRoute
+              exact
+              path="/update"
+              component={UpdateOrders}
             />
             {/* This works the same as the other protected route, except that if the user is logged in,
             they will see the info page instead. */}

@@ -5,14 +5,12 @@ const router = express.Router();
 router.post('/', (req, res) => {
 
     if (req.isAuthenticated()) {
-        console.log('WREK 8!!!!', req.body.data);
         
         (async () => {
             const client = await pool.connect();
             try {
                 await client.query('BEGIN');
                 if (req.user.manager === false) {
-
                     let queryText = `SELECT "fulfillment".*, "order"."order_name",
                         "person"."username"
                     FROM "fulfillment"
@@ -44,11 +42,7 @@ router.post('/', (req, res) => {
                                          VALUES($1,$2)
                                          RETURNING "id";`;
                             values = [order.id, order.person_id]
-                            //let values = [req.body.id, req.body.person];
-                            console.log('wreck body person: ', req.body.person);
-                            console.log('wreck body id: ', req.body.id);
                             results = await client.query(queryText, values);
-                            console.log('results 44: ', results);
                             const resultsId = results.rows[0].id;
 
                             queryText = `SELECT "product"."product_name",

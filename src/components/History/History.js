@@ -25,8 +25,21 @@ constructor(){
     }
 
     getOrders = () => {
-        const action = { type: 'GET_ORDERS' };
-        this.props.dispatch(action);
+        console.log('in get orders');
+
+        let userId = { id: this.props.reduxStore.user.id }
+        axios({
+            method: 'POST',
+            url: '/api/dashboardGet',
+            data: userId,
+        }).then((response) => {
+            this.setState({
+                orders: response.data
+            })
+        })
+
+        // const action = { type: 'GET_ORDERS', payload:id};
+        // this.props.dispatch(action);
     }
 
     getNotes = (event) => {
@@ -52,8 +65,8 @@ constructor(){
         this.props.dispatch(action)
         this.getNotes();
         orderHeader = <h3>{
-            this.props.reduxStore.orders.map((order) => {
-                if (order.id == this.state.historyQuery.order) {
+            this.state.orders.map((order) => {
+                if (order.order_id == this.state.historyQuery.order) {
                     return (order.order_name)
                 }
             })}</h3>
@@ -93,8 +106,8 @@ constructor(){
                 <input type="date" onChange={this.setDate}/>
                 <select onChange={this.setOrder}>
                     <option value="" disabled selected>Select an Order</option>
-                    {this.props.reduxStore.orders.map((order) => {
-                        return (<option value={order.id}>{order.order_name}</option>)
+                    {this.state.orders.map((order) => {
+                        return (<option value={order.order_id}>{order.order_name}</option>)
                     })}
                 </select>
                 <button onClick={this.getHistory}>Show history</button>
