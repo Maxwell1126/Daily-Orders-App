@@ -119,18 +119,10 @@ router.put('/', (req, res) => {
                 let values = [req.body.id, req.body.orderId];
                 let results = await client.query(queryText, values);
 
-                queryText = `SELECT "fulfillment".* FROM "fulfillment"
-                             JOIN "order" ON "order"."id" = "fulfillment"."order_id"
-                             WHERE "fulfillment"."date" = CURRENT_DATE
-                             AND "fulfillment"."order_id" = $1
-                             GROUP BY "fulfillment"."id";`;
-                values = [req.body.orderId]
-                results = await client.query(queryText,values);
-                let resultsId = results.rows[0].id
-
-                queryText = `UPDATE "fulfillment" SET "person_id" = $1
-                             WHERE "id" =$2;`
-                values = [req.body.id,resultsId];
+                queryText = `UPDATE "fulfillment" SET "person_id"=$1
+                             WHERE "fulfillment"."date" >= CURRENT_DATE
+                             AND "fulfillment"."order_id" = $2;`;
+                values = [req.body.id,req.body.orderId];
                 results = await client.query(queryText,values);
 
                 await client.query('COMMIT');
