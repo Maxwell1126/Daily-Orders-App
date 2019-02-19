@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import axios from 'axios';
+import TableRow from '@material-ui/core/TableRow';
+import TableCell from '@material-ui/core/TableCell';
 const moment = require('moment');
 
 class UserPageOrders extends Component {
@@ -49,11 +51,11 @@ this.state={
                             {this.props.order.order_name}
                             {this.props.order.username}</li>
         }else{
-            orderContent = <li onClick={this.toOrderSheet}>
+            orderContent = <TableRow onClick={this.toOrderSheet}>
                 {/* {JSON.stringify(this.props)} */}
                 {/* {JSON.stringify(this.props.order)} */}
-                            {this.props.order.order_name}
-                            {statusName}</li>
+                <TableCell>{this.props.order.order_name}</TableCell>
+                <TableCell>{statusName}</TableCell></TableRow>
         }
         return (orderContent)
     }

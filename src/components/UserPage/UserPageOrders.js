@@ -2,6 +2,12 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import UserPageOrdersClick from './UserPageOrdersClick';
 import axios from 'axios';
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
+import Paper from '@material-ui/core/Paper';
 const moment = require('moment');
 moment().format();
 class UserPageOrders extends Component {
@@ -43,13 +49,18 @@ class UserPageOrders extends Component {
     // this.render
     // 
     render() {
-        return (
-            <div>
-                
-                <ul>{this.state.orders.map((order) => {
+        return (  
+                <Table>
+                <TableHead>
+                    <TableRow>
+                        <TableCell>Order Name</TableCell>
+                        <TableCell>Status</TableCell>
+                    </TableRow>
+                </TableHead>
+                <TableBody>{this.state.orders.map((order) => {
         return (<UserPageOrdersClick key={order.id}order={order} history={this.props.history} getOrders={this.getOrders}/>)
-      })}</ul>
-            </div>
+                })}</TableBody>
+                </Table>
         )
     }
 }

@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import LogOutButton from '../LogOutButton/LogOutButton';
 import axios from 'axios';
 let orderHeader;
 let dateHeader;
@@ -125,7 +124,6 @@ constructor(){
                     return<div>{product.product_name} {product.quantity}</div>
                 })}</div>
                 <br></br>
-                <LogOutButton className="log-in" />
             </div>
         )
     }

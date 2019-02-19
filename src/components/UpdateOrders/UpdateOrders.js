@@ -180,7 +180,6 @@ class UpdateOrders extends Component {
                 })}</ul>
                 {addProductContent}
                 <br></br>
-                <LogOutButton className="log-in" />
             </div>
         )
     }

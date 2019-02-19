@@ -1,8 +1,16 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import LogOutButton from '../LogOutButton/LogOutButton';
 import axios from 'axios';
 import OrderSheetItem from './OrderSheetItem';
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
+import Paper from '@material-ui/core/Paper';
+import Grid from '@material-ui/core/Grid';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
 const moment = require('moment');
 const currentDate = moment().format('L')
 
@@ -24,10 +32,6 @@ class OrderSheet extends Component {
         this.getOrders();
     }
 
-    // getProducts = () => {
-    //     const action = { type: 'GET_PRODUCTS' };
-    //     this.props.dispatch(action);
-    // }
     getOrders = () => {
         console.log('in get orders');
 
@@ -42,11 +46,9 @@ class OrderSheet extends Component {
             })
         })
 
-        // const action = { type: 'GET_ORDERS', payload:id};
-        // this.props.dispatch(action);
     }
     getProducts = (event) => {
-        // console.log('in getproducts');
+        console.log('in getproducts');
         let orderDetails = {
             id: this.props.match.params.id,
             date: this.state.date,
@@ -56,15 +58,13 @@ class OrderSheet extends Component {
             method: 'POST',
             url: '/api/ordersheet/',
             data: orderDetails,
-        }).then((response) => {
-            // console.log('response.data order 45', response.data);
-            //console.log('the products array', this.state.products);
-
+        }).then((response) => {;
             this.setState({
                 products: response.data,
             })
         })
     }
+
     getNotes = (event) => {
         let note = {
             order: this.props.match.params.id,
@@ -75,7 +75,6 @@ class OrderSheet extends Component {
             url: '/api/notesGet',
             data: note,
         }).then((response) => {
-            // console.log('response.data', response.data);
             this.setState({
                 notes: response.data
             })
@@ -118,7 +117,6 @@ class OrderSheet extends Component {
             this.getProducts();
         }).catch((error) => {
             console.log('error on client putting orders', error);
-
         })
     }
 
@@ -144,8 +142,6 @@ class OrderSheet extends Component {
     }
 
     setNote = (event) => {
-        console.log('note:', this.state.note.note);
-
         this.setState({
             note: {
                 ...this.state.notes,
@@ -200,9 +196,7 @@ class OrderSheet extends Component {
             date: moment(this.state.date).subtract(1, 'days').format('L'),
         }, () => {
             this.getOrders()
-        }, () => {
             this.getProducts()
-        }, () => {
             this.getNotes()
         });
     }
@@ -212,9 +206,7 @@ class OrderSheet extends Component {
             date: moment(this.state.date).add(1, 'days').format('L'),
         }, () => {
             this.getOrders()
-        }, () => {
             this.getProducts()
-        }, () => {
             this.getNotes()
         });
     }
@@ -224,11 +216,11 @@ class OrderSheet extends Component {
         let noteContent;
         if (this.state.notes.length > 0) {
             noteHeader = <h3>Existing Notes:</h3>;
-            noteContent = <ul>
+            noteContent = <List>
                 {this.state.notes.map((note) => {
-                    return <li>{note.note_entry}</li>
+                    return <ListItem>{note.note_entry}</ListItem>
                 })}
-            </ul>
+            </List>
         }
 
         let addNoteContent;
@@ -256,23 +248,16 @@ class OrderSheet extends Component {
 
         return (
             <div>
-                {/* {console.log('the date',this.state.date)} */}
-                {/* <p>{JSON.stringify(this.props.reduxStore.orders)}</p> */}
-                {<p>{JSON.stringify(this.props.reduxStore.user.manager)}</p>}
-                {/* <p>{JSON.stringify(this.state.notes)}</p> */}
-                {JSON.stringify(statusId)}
                 {this.state.orders.map((order) => {
                     if (order.id == this.props.match.params.id) {
                         return (<h1>{order.order_name}</h1>)
                     }
                 })}
                 <button onClick={this.backDay}>-</button><h2>{this.state.date}</h2><button onClick={this.forwardDay}>+</button>
-                {/* <p>{JSON.stringify(this.props)}</p> */}
                 {noteHeader}
                 {noteContent}
                 {addNoteContent}
                 <div>{this.state.products.map((product, i) => {
-                    //console.log('product',product);
                     return (<OrderSheetItem
                         manager={this.props.reduxStore.user.manager}
                         statusId={statusId}
@@ -288,7 +273,6 @@ class OrderSheet extends Component {
                 {buttons}
                 <br></br>
                 <br></br>
-                <LogOutButton className="log-in" />
             </div>
         )
     }

@@ -17,7 +17,7 @@ import AboutPage from '../AboutPage/AboutPage';
 import UserPage from '../UserPage/UserPage';
 import InfoPage from '../InfoPage/InfoPage';
 
-
+import 'typeface-roboto';
 import './App.css';
 import UpdateOrders from '../UpdateOrders/UpdateOrders';
 import OrderSheet from '../OrderSheet/OrderSheet';
