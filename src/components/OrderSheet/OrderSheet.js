@@ -94,6 +94,8 @@ class OrderSheet extends Component {
             data: products,
         }).then((response) => {
             this.getProducts();
+            alert('Order Approved.')
+            this.props.history.push('/home')
         }).catch((error) => {
             console.log('error on client putting orders', error);
 
@@ -112,6 +114,7 @@ class OrderSheet extends Component {
             url: '/api/ordersheet',
             data: products,
         }).then((response) => {
+            alert('Order Saved. Remember to Submit.')
             this.getProducts();
         }).catch((error) => {
             console.log('error on client putting orders', error);
@@ -131,7 +134,9 @@ class OrderSheet extends Component {
             url: '/api/ordersheet',
             data: products,
         }).then((response) => {
+            alert('Succesfully Submitted Order!')
             this.getProducts();
+            this.props.history.push('/home')
         }).catch((error) => {
             console.log('error on client putting orders', error);
 
@@ -191,7 +196,6 @@ class OrderSheet extends Component {
     }
 
     backDay = (event) => {
-
         this.setState({
             date: moment(this.state.date).subtract(1, 'days').format('L'),
         }, () => {
@@ -201,7 +205,6 @@ class OrderSheet extends Component {
         }, () => {
             this.getNotes()
         });
-        // myDate.subtract(1, 'days').format('L');
     }
 
     forwardDay = (event) => {
@@ -214,10 +217,6 @@ class OrderSheet extends Component {
         }, () => {
             this.getNotes()
         });
-        console.log('in forwardDay', this.state.date)
-        // this.getProducts();
-
-        // myDate.subtract(1, 'days').format('L');
     }
 
     render() {
@@ -231,6 +230,7 @@ class OrderSheet extends Component {
                 })}
             </ul>
         }
+
         let addNoteContent;
         let buttons;
         let statusId;
@@ -253,7 +253,6 @@ class OrderSheet extends Component {
             buttons = <div><button id="save" onClick={this.saveOrder}>Save</button>
                 <button id="submit" onClick={this.approveOrder}>Approve</button></div>
         }
-
 
         return (
             <div>
