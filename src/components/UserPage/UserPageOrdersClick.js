@@ -33,7 +33,14 @@ this.state={
     // this.render
     // 
     render() {
-        
+        let statusName;
+        if(this.props.order.status_id==1){
+            statusName = <p>Incomplete</p>
+        }else if(this.props.order.status_id==2){
+            statusName=<p>Complete</p>
+        } else if (this.props.order.status_id==4){
+            statusName=<p>Approved</p>
+        }
         let orderContent;
         if(this.props.user.manager==true){
             orderContent = <li onClick={this.toOrderSheet}>
@@ -45,7 +52,8 @@ this.state={
             orderContent = <li onClick={this.toOrderSheet}>
                 {/* {JSON.stringify(this.props)} */}
                 {/* {JSON.stringify(this.props.order)} */}
-                            {this.props.order.order_name}</li>
+                            {this.props.order.order_name}
+                            {statusName}</li>
         }
         return (orderContent)
     }
