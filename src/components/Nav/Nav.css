@@ -1,7 +1,8 @@
 .nav-title {
     font-size: 24px;
     font-weight: 700;
-    display: inline-block;
+    justify-content: center;
+    display: flex;
     color: #f2f2f2;
     padding-left: 10px;
 }
@@ -32,5 +33,5 @@
 }
 
 .nav-right {
-  float: right;
+  float: right
 }

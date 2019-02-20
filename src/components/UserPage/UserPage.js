@@ -25,11 +25,10 @@ render(){
   return(
     <div>
       <Grid container
-          spacing={20}
           direction="column"
           alignItems="center">
-     <h1>Welcome, { this.props.user.username }!</h1>
-     <h4>{currentDate}</h4> 
+     <h2>Welcome, { this.props.user.username }</h2>
+    <h4>Today's Date<br></br>{currentDate}</h4>
      {userPageContent}
       </Grid>
    </div>

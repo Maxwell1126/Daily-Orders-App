@@ -66,6 +66,8 @@ class OrderSheet extends Component {
     }
 
     getNotes = (event) => {
+        console.log('in get notes');
+        
         let note = {
             order: this.props.match.params.id,
             date: this.state.date,
@@ -201,15 +203,14 @@ class OrderSheet extends Component {
         });
     }
 
-    forwardDay = (event) => {
-        this.setState({
+    forwardDay = async (event) => {
+        await this.setState({
             date: moment(this.state.date).add(1, 'days').format('L'),
-        }, () => {
-            this.getOrders()
-            this.getProducts()
-            this.getNotes()
-        });
-    }
+        })
+        await this.getOrders()
+              this.getProducts()
+              this.getNotes()
+        };
 
     render() {
         let noteHeader;
@@ -232,6 +233,10 @@ class OrderSheet extends Component {
         }))
         if (currentDate <= this.state.date && statusId < 3
             && this.props.reduxStore.user.manager == false) {
+                console.log('state date:',this.state.date);
+                console.log('status ', statusId);
+            console.log('manager', this.props.reduxStore.user.manager);
+                
             addNoteContent = <div><h3>Add Notes:</h3>
                 <textarea onChange={this.setNote}></textarea>
                 <button onClick={this.addNote}>Add Note</button></div>

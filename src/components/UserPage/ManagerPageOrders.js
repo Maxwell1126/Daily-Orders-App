@@ -1,6 +1,13 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import UserPageOrdersClick from './UserPageOrdersClick';
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
+import Paper from '@material-ui/core/Paper';
+import Card from '@material-ui/core/Card';
 const moment = require('moment');
 moment().format();
 class ManagerPageOrders extends Component {
@@ -29,30 +36,62 @@ class ManagerPageOrders extends Component {
         return (
             <div>
                 {/* {JSON.stringify(this.props.reduxStore.orders)} */}
-                <ul>Order's Pending Apporoval
-                {this.props.reduxStore.orders.map((order) => {
-                    if(order.status_id == 2){
-                    return (<UserPageOrdersClick key={order.id} order={order}
-                                                 history={this.props.history}
-                                                 getOrders={this.getOrders} />)
-                    }
-                })}</ul>
-                <ul>Order's Incomplete
-                {this.props.reduxStore.orders.map((order) => {
-                    if (order.status_id == 1) {
-                        return (<UserPageOrdersClick key={order.id} order={order}
-                            history={this.props.history}
-                            getOrders={this.getOrders} />)
-                    }
-                })}</ul>
-                <ul>Order's Approved
-                {this.props.reduxStore.orders.map((order) => {
-                    if (order.status_id == 4) {
-                        return (<UserPageOrdersClick key={order.id} order={order}
-                            history={this.props.history}
-                            getOrders={this.getOrders} />)
-                    }
-                })}</ul>
+                <Card raised="true">
+                    <Table >
+                        <TableHead>
+                            Order's Pending Apporoval
+                            <TableRow>
+                                <TableCell>Order Name</TableCell>
+                                <TableCell>Status</TableCell>
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>{this.props.reduxStore.orders.map((order) => {
+                            if (order.status_id == 2) {
+                                return (<UserPageOrdersClick key={order.id} order={order}
+                                    history={this.props.history}
+                                    getOrders={this.getOrders} />)
+                            }
+                        })}</TableBody>
+                    </Table>
+                </Card>
+
+                <Card raised="true">
+                    <Table >
+                        <TableHead>
+                            Order's Incomplete
+                            <TableRow>
+                                <TableCell>Order Name</TableCell>
+                                <TableCell>Status</TableCell>
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>{this.props.reduxStore.orders.map((order) => {
+                            if (order.status_id == 1) {
+                                return (<UserPageOrdersClick key={order.id} order={order}
+                                    history={this.props.history}
+                                    getOrders={this.getOrders} />)
+                            }
+                        })}</TableBody>
+                    </Table>
+                </Card>
+
+                <Card raised="true">
+                    <Table >
+                        <TableHead>
+                            Order's Approved
+                            <TableRow>
+                                <TableCell>Order Name</TableCell>
+                                <TableCell>Status</TableCell>
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>{this.props.reduxStore.orders.map((order) => {
+                            if (order.status_id == 4) {
+                                return (<UserPageOrdersClick key={order.id} order={order}
+                                    history={this.props.history}
+                                    getOrders={this.getOrders} />)
+                            }
+                        })}</TableBody>
+                    </Table>
+                </Card>       
             </div>
         )
     }

@@ -8,13 +8,14 @@ import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
+import Card from '@material-ui/core/Card';
 const moment = require('moment');
 moment().format();
 class UserPageOrders extends Component {
     constructor(props) {
         super(props)
-        this.state={
-            orders:[],
+        this.state = {
+            orders: [],
         }
     }
 
@@ -24,18 +25,18 @@ class UserPageOrders extends Component {
 
     getOrders = () => {
         console.log('in get orders');
-        
-        let userId = { id:this.props.reduxStore.user.id}
+
+        let userId = { id: this.props.reduxStore.user.id }
         axios({
-            method:'POST',
-            url:'/api/dashboardGet',
+            method: 'POST',
+            url: '/api/dashboardGet',
             data: userId,
-        }).then((response)=>{
+        }).then((response) => {
             this.setState({
                 orders: response.data
             })
         })
-        
+
         // const action = { type: 'GET_ORDERS', payload:id};
         // this.props.dispatch(action);
     }
@@ -49,18 +50,20 @@ class UserPageOrders extends Component {
     // this.render
     // 
     render() {
-        return (  
-                <Table>
-                <TableHead>
-                    <TableRow>
-                        <TableCell>Order Name</TableCell>
-                        <TableCell>Status</TableCell>
-                    </TableRow>
-                </TableHead>
-                <TableBody>{this.state.orders.map((order) => {
-        return (<UserPageOrdersClick key={order.id}order={order} history={this.props.history} getOrders={this.getOrders}/>)
-                })}</TableBody>
+        return (
+            <Card raised="true">
+                <Table >
+                    <TableHead>
+                        <TableRow>
+                            <TableCell>Order Name</TableCell>
+                            <TableCell>Status</TableCell>
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>{this.state.orders.map((order) => {
+                        return (<UserPageOrdersClick key={order.id} order={order} history={this.props.history} getOrders={this.getOrders} />)
+                    })}</TableBody>
                 </Table>
+            </Card>
         )
     }
 }
