@@ -11,6 +11,11 @@ import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
+import Button from '@material-ui/core/Button';
+import Fab from '@material-ui/core/Fab';
+import TextField from '@material-ui/core/TextField';
+import Card from '@material-ui/core/Card';
+import './OrderSheet.css';
 const moment = require('moment');
 const currentDate = moment().format('L')
 
@@ -22,7 +27,7 @@ class OrderSheet extends Component {
             notes: [],
             note: '',
             date: moment().format('L'),
-            orders:[],
+            orders: [],
         }
     }
 
@@ -35,11 +40,14 @@ class OrderSheet extends Component {
     getOrders = () => {
         console.log('in get orders');
 
-        let userId = { id: this.props.reduxStore.user.id }
+        let userInfo = {
+            id: this.props.reduxStore.user.id,
+            date: this.state.date,
+        }
         axios({
             method: 'POST',
             url: '/api/dashboardGet',
-            data: userId,
+            data: userInfo,
         }).then((response) => {
             this.setState({
                 orders: response.data
@@ -58,7 +66,8 @@ class OrderSheet extends Component {
             method: 'POST',
             url: '/api/ordersheet/',
             data: orderDetails,
-        }).then((response) => {;
+        }).then((response) => {
+            ;
             this.setState({
                 products: response.data,
             })
@@ -67,7 +76,7 @@ class OrderSheet extends Component {
 
     getNotes = (event) => {
         console.log('in get notes');
-        
+
         let note = {
             order: this.props.match.params.id,
             date: this.state.date,
@@ -206,18 +215,16 @@ class OrderSheet extends Component {
     forwardDay = async (event) => {
         await this.setState({
             date: moment(this.state.date).add(1, 'days').format('L'),
-        })
+        });
         await this.getOrders()
-              this.getProducts()
-              this.getNotes()
-        };
+        await this.getProducts()
+        await this.getNotes()
+    };
 
     render() {
-        let noteHeader;
         let noteContent;
         if (this.state.notes.length > 0) {
-            noteHeader = <h3>Existing Notes:</h3>;
-            noteContent = <List>
+            noteContent = <List><h3>Existing Notes:</h3>
                 {this.state.notes.map((note) => {
                     return <ListItem>{note.note_entry}</ListItem>
                 })}
@@ -228,38 +235,78 @@ class OrderSheet extends Component {
         let buttons;
         let statusId;
         (this.state.products.map((product) => {
-                statusId=product.status_id
-                return (product.status_id)
+            statusId = product.status_id
+            return (product.status_id)
         }))
         if (currentDate <= this.state.date && statusId < 3
             && this.props.reduxStore.user.manager == false) {
-                console.log('state date:',this.state.date);
-                console.log('status ', statusId);
+            console.log('state date:', this.state.date);
+            console.log('status ', statusId);
             console.log('manager', this.props.reduxStore.user.manager);
-                
-            addNoteContent = <div><h3>Add Notes:</h3>
-                <textarea onChange={this.setNote}></textarea>
-                <button onClick={this.addNote}>Add Note</button></div>
-            buttons = <div><button id="save" onClick={this.saveOrder}>Save</button>
-                <button id="submit" onClick={this.submitOrder}>Submit</button></div>
+
+            addNoteContent =
+                <Grid container
+                    style={{ padding: 10 }}
+                    direction="column"
+                    justify="flex-end">
+                    <h3>Add Notes:</h3>
+                    <TextField variant="outlined" fullWidth onChange={this.setNote} />
+                    <Button size="small" color="default" variant="outlined" 
+                    onClick={this.addNote}>Add Note</Button>
+                </Grid>
+            buttons = <div><Grid
+                container
+                direction="row"
+                justify="space-evenly"
+                alignItems="center"><Button variant="outlined" onClick={this.saveOrder}>Save</Button>
+                <Button variant="outlined"  onClick={this.submitOrder}>Submit</Button></Grid></div>
         } else if (currentDate <= this.state.date &&
             this.props.reduxStore.user.manager == true) {
             addNoteContent = <div><h3>Add Notes:</h3>
-                <textarea onChange={this.setNote}></textarea>
-                <button onClick={this.addNote}>Add Note</button></div>
-            buttons = <div><button id="save" onClick={this.saveOrder}>Save</button>
-                <button id="submit" onClick={this.approveOrder}>Approve</button></div>
+                <TextField variant="outlined" fullWidth onChange={this.setNote} />
+                <Button variant="outlined" onClick={this.addNote}>Add Note</Button></div>
+            buttons = <div><Grid
+                container
+                direction="row"
+                justify="space-evenly"
+                alignItems="center"><Button  onClick={this.saveOrder}>Save</Button>
+                <Button fullWidth onClick={this.approveOrder}>Approve</Button></Grid></div>
         }
 
         return (
-            <div>
-                {this.state.orders.map((order) => {
-                    if (order.id == this.props.match.params.id) {
-                        return (<h1>{order.order_name}</h1>)
-                    }
-                })}
-                <button onClick={this.backDay}>-</button><h2>{this.state.date}</h2><button onClick={this.forwardDay}>+</button>
-                {noteHeader}
+            <div className="main">
+            <Grid contianer 
+            direction="column"
+                justify="flex-start"
+                alignItems="center"
+                
+                >
+                <Grid
+                    container
+                    direction="column"
+                    justify="flex-start"
+                    alignItems="center"
+                >
+
+                    {this.state.orders.map((order) => {
+                        if (order.order_id == this.props.match.params.id) {
+                            return (<h1>{order.order_name}</h1>)
+                        }
+                    })}
+                </Grid>
+                    <Card className="dateToggle">
+                <Grid
+                    container
+                    direction="row"
+                    justify="space-evenly"
+                    alignItems="center">
+                    
+                    <Fab size="small" onClick={this.backDay}>-</Fab>
+                    <h2>{this.state.date}</h2>
+
+                    <Fab size="small" onClick={this.forwardDay}>+</Fab>
+                </Grid>
+                </Card>
                 {noteContent}
                 {addNoteContent}
                 <div>{this.state.products.map((product, i) => {
@@ -276,8 +323,7 @@ class OrderSheet extends Component {
                         getProducts={this.getProducts} />)
                 })}</div>
                 {buttons}
-                <br></br>
-                <br></br>
+            </Grid>
             </div>
         )
     }

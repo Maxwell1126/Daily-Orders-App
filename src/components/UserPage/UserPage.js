@@ -24,14 +24,27 @@ render(){
   }
   return(
     <div>
-      <Grid container
-          direction="column"
-          alignItems="center">
-     <h2>Welcome, { this.props.user.username }</h2>
-    <h4>Today's Date<br></br>{currentDate}</h4>
+    <Grid
+      container
+      direction="column"
+      justify="flex-start"
+      alignItems="center"
+      spacing={0}
+    >
+      <h2>Welcome, {this.props.user.username}</h2>
+      <h4>Today's Date<br></br>{currentDate}</h4>
+    </Grid> 
+      <Grid
+        container
+        direction="column"
+        justify="center"
+        alignItems="center"
+
+      >
+       
      {userPageContent}
       </Grid>
-   </div>
+    </div>
   )
 }
 }

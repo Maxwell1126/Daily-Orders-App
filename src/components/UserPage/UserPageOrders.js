@@ -9,6 +9,7 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import Card from '@material-ui/core/Card';
+import Grid from '@material-ui/core/Grid';
 const moment = require('moment');
 moment().format();
 class UserPageOrders extends Component {
@@ -16,6 +17,7 @@ class UserPageOrders extends Component {
         super(props)
         this.state = {
             orders: [],
+            date: moment().format('L'),
         }
     }
 
@@ -26,7 +28,8 @@ class UserPageOrders extends Component {
     getOrders = () => {
         console.log('in get orders');
 
-        let userId = { id: this.props.reduxStore.user.id }
+        let userId = { id: this.props.reduxStore.user.id,
+                        date: this.state.date, }
         axios({
             method: 'POST',
             url: '/api/dashboardGet',
@@ -51,7 +54,13 @@ class UserPageOrders extends Component {
     // 
     render() {
         return (
-            <Card raised="true">
+            <Grid
+                container
+                style={{ padding: 20 }}
+                direction="column"
+                justify="space-evenly"
+                alignItems="stretch">
+            <Card >
                 <Table >
                     <TableHead>
                         <TableRow>
@@ -64,6 +73,7 @@ class UserPageOrders extends Component {
                     })}</TableBody>
                 </Table>
             </Card>
+            </Grid>
         )
     }
 }

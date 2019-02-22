@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-
+import Grid from '@material-ui/core/Grid';
+import Button from '@material-ui/core/Button';
+import './OrderSheetItem.css'
 class OrderSheet extends Component {
     componentDidMount() {
         this.props.getProducts();
@@ -23,13 +25,24 @@ class OrderSheet extends Component {
         let productContent;
         if (this.props.currentDate > this.props.date 
             || (this.props.statusId>=3 && this.props.manager==false)) {
-            productContent = <div>{this.props.product.product_name}
-                                  {this.props.product.quantity}</div>
+            productContent = <Grid container
+                direction="row"
+                justify="space-evenly"
+                alignItems="center"><h4>{this.props.product.product_name}</h4>
+                <h4>{this.props.product.quantity}</h4></Grid>
         } else {
-            productContent = <div>{ this.props.product.product_name }
-                < button onClick = { this.upCount } > +</button >
-                    { this.props.product.quantity }
-                < button onClick={this.downCount} > -</button ></div>
+            productContent = <Grid container
+                direction="row"
+                justify="space-evenly"
+                alignItems="center"><h4 className="prodName">
+                {this.props.product.product_name}</h4>
+                <div className="buttonQuantity">
+                <Grid container
+                    direction="row"
+                    justify="space-evenly"
+                    alignItems="center">< button onClick = { this.upCount } > +</button >
+                <h4>{this.props.product.quantity}</h4>
+                        < button onClick={this.downCount} > -</button ></Grid> </div></Grid>
         }
         return (<div>
             {productContent}</div>)

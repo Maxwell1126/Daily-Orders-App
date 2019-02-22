@@ -8,6 +8,9 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import Card from '@material-ui/core/Card';
+
+import Grid from '@material-ui/core/Grid';
+import { CardContent } from '@material-ui/core';
 const moment = require('moment');
 moment().format();
 class ManagerPageOrders extends Component {
@@ -33,16 +36,25 @@ class ManagerPageOrders extends Component {
     // this.render
     // 
     render() {
-        return (
-            <div>
-                {/* {JSON.stringify(this.props.reduxStore.orders)} */}
-                <Card raised="true">
+        return (        
+                <Grid container
+                    direction="column"
+                    justify="space-evenly"
+                    alignItems="stretch">
+                    <Grid
+                        container
+                        direction="column"
+                        justify="space-evenly"
+                        alignItems="stretch"
+                    style={{ padding: 20 }}>
+                <Card >
+                    <CardContent><strong>Order's Pending Apporoval</strong>
+                    </CardContent>
                     <Table >
-                        <TableHead>
-                            Order's Pending Apporoval
+                        <TableHead alignItems="center">        
                             <TableRow>
                                 <TableCell>Order Name</TableCell>
-                                <TableCell>Status</TableCell>
+                                <TableCell>Writer</TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>{this.props.reduxStore.orders.map((order) => {
@@ -54,14 +66,21 @@ class ManagerPageOrders extends Component {
                         })}</TableBody>
                     </Table>
                 </Card>
-
-                <Card raised="true">
+                        </Grid>
+                    <Grid
+                        container
+                        direction="column"
+                        justify="space-evenly"
+                        alignItems="stretch"
+                        style={{ padding: 20 }}>
+                <Card >
+                    <CardContent><strong>Order's Incomplete</strong>
+                    </CardContent>
                     <Table >
                         <TableHead>
-                            Order's Incomplete
                             <TableRow>
                                 <TableCell>Order Name</TableCell>
-                                <TableCell>Status</TableCell>
+                                <TableCell>Writer</TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>{this.props.reduxStore.orders.map((order) => {
@@ -73,14 +92,23 @@ class ManagerPageOrders extends Component {
                         })}</TableBody>
                     </Table>
                 </Card>
-
-                <Card raised="true">
+                    </Grid>
+                    <Grid
+                        container
+                        direction="column"
+                        justify="space-evenly"
+                        alignItems="stretch"
+                        style={{ padding: 20 }}>
+                <Card >
+                    <CardContent>
+                        <strong>Order's Approved</strong>
+                    </CardContent>
                     <Table >
                         <TableHead>
-                            Order's Approved
+                                    
                             <TableRow>
                                 <TableCell>Order Name</TableCell>
-                                <TableCell>Status</TableCell>
+                                <TableCell>Writer</TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>{this.props.reduxStore.orders.map((order) => {
@@ -91,11 +119,13 @@ class ManagerPageOrders extends Component {
                             }
                         })}</TableBody>
                     </Table>
-                </Card>       
-            </div>
+                </Card> 
+                </Grid> 
+                </Grid>   
         )
     }
 }
+
 // Instead of taking everything from state, we just want the user info.
 // if you wanted you could write this code like this:
 // const mapStateToProps = ({user}) => ({ user });

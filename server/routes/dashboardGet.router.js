@@ -18,10 +18,10 @@ router.post('/', (req, res) => {
                         "fulfillment"."order_id"
                     JOIN "person" ON "person"."id" =
                         "fulfillment"."person_id"
-                    WHERE "date" = CURRENT_DATE
-                    AND "fulfillment"."person_id" = $1
+                    WHERE "date" = $1
+                    AND "fulfillment"."person_id" = $2
                     ORDER BY "order"."id";`;
-                    let values = [req.body.id];
+                    let values = [req.body.date,req.body.id];
                     let results = await client.query(queryText, values)
 
                     await client.query('COMMIT');

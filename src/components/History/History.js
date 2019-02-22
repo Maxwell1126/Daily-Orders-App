@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import axios from 'axios';
+const moment = require('moment');
 let orderHeader;
 let dateHeader;
 
@@ -16,6 +17,7 @@ constructor(){
         },
         products:[],
         notes:[],
+        date: moment().format('L'),
     }
 }
 
@@ -26,7 +28,8 @@ constructor(){
     getOrders = () => {
         console.log('in get orders');
 
-        let userId = { id: this.props.reduxStore.user.id }
+        let userId = { id: this.props.reduxStore.user.id,
+                       date: this.state.date, }
         axios({
             method: 'POST',
             url: '/api/dashboardGet',

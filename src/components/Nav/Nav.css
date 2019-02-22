@@ -10,6 +10,7 @@
 .nav {
   overflow: hidden;
   background-color: red;
+
 }
 
 .nav-link {
@@ -34,4 +35,17 @@
 
 .nav-right {
   float: right
+}
+
+.sticky {
+  position: fixed;
+  top: 0;
+  width: 100%;
+}
+
+.sticky + .content {
+  padding-top: 60px;
+}
+.content {
+  padding: 16px;
 }
