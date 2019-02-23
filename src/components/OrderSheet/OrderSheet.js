@@ -224,11 +224,11 @@ class OrderSheet extends Component {
     render() {
         let noteContent;
         if (this.state.notes.length > 0) {
-            noteContent = <List><h3>Existing Notes:</h3>
+            noteContent = <Card><List style={{padding:10}}><h3>Existing Notes:</h3>
                 {this.state.notes.map((note) => {
                     return <ListItem>{note.note_entry}</ListItem>
                 })}
-            </List>
+            </List></Card>
         }
 
         let addNoteContent;
@@ -251,8 +251,13 @@ class OrderSheet extends Component {
                     justify="flex-end">
                     <h3>Add Notes:</h3>
                     <TextField variant="outlined" fullWidth onChange={this.setNote} />
-                    <Button size="small" color="default" variant="outlined" 
+                    <Grid container
+                    style={{ paddingTop: 10 }}
+                    justify="flex-end"
+                    direction="row">
+                <Button className="addNoteButton" color="default" variant="outlined" 
                     onClick={this.addNote}>Add Note</Button>
+                </Grid>
                 </Grid>
             buttons = <div><Grid
                 container
@@ -262,15 +267,27 @@ class OrderSheet extends Component {
                 <Button variant="outlined"  onClick={this.submitOrder}>Submit</Button></Grid></div>
         } else if (currentDate <= this.state.date &&
             this.props.reduxStore.user.manager == true) {
-            addNoteContent = <div><h3>Add Notes:</h3>
-                <TextField variant="outlined" fullWidth onChange={this.setNote} />
-                <Button variant="outlined" onClick={this.addNote}>Add Note</Button></div>
+            addNoteContent =
+                <Grid container
+                    style={{ padding: 10 }}
+                    direction="column"
+                    justify="flex-end">
+                    <h3>Add Notes:</h3>
+                    <TextField variant="outlined" fullWidth onChange={this.setNote} />
+                    <Grid container
+                        style={{ paddingTop: 10 }}
+                        justify="flex-end"
+                        direction="row">
+                        <Button className="addNoteButton" color="default" variant="outlined"
+                            onClick={this.addNote}>Add Note</Button>
+                    </Grid>
+                </Grid>
             buttons = <div><Grid
                 container
                 direction="row"
                 justify="space-evenly"
-                alignItems="center"><Button  onClick={this.saveOrder}>Save</Button>
-                <Button fullWidth onClick={this.approveOrder}>Approve</Button></Grid></div>
+                alignItems="center"><Button variant="outlined" onClick={this.saveOrder}>Save</Button>
+                <Button variant="outlined" onClick={this.approveOrder}>Approve</Button></Grid></div>
         }
 
         return (
@@ -281,34 +298,38 @@ class OrderSheet extends Component {
                 alignItems="center"
                 
                 >
+                    <Card className="dateToggle">
                 <Grid
                     container
                     direction="column"
                     justify="flex-start"
                     alignItems="center"
                 >
-
+                        
                     {this.state.orders.map((order) => {
                         if (order.order_id == this.props.match.params.id) {
                             return (<h1>{order.order_name}</h1>)
                         }
                     })}
                 </Grid>
-                    <Card className="dateToggle">
+                    
                 <Grid
                     container
                     direction="row"
                     justify="space-evenly"
                     alignItems="center">
                     
-                    <Fab size="small" onClick={this.backDay}>-</Fab>
+                            <Fab size="small" onClick={this.backDay}><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M0 0h24v24H0z" fill="none" /><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z" /></svg></Fab>
                     <h2>{this.state.date}</h2>
 
-                    <Fab size="small" onClick={this.forwardDay}>+</Fab>
+                            <Fab size="small" onClick={this.forwardDay}><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M0 0h24v24H0z" fill="none" /><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z" /></svg></Fab>
                 </Grid>
-                </Card>
+                </Card >
+                    <Card className="dateToggle">
                 {noteContent}
+                    
                 {addNoteContent}
+                    
                 <div>{this.state.products.map((product, i) => {
                     return (<OrderSheetItem
                         manager={this.props.reduxStore.user.manager}
@@ -322,7 +343,9 @@ class OrderSheet extends Component {
                         downQuantity={this.downQuantity}
                         getProducts={this.getProducts} />)
                 })}</div>
+                    
                 {buttons}
+                    </Card>
             </Grid>
             </div>
         )

@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import LogOutButton from '../LogOutButton/LogOutButton';
 import UpdateOrdersProducts from './UpdateOrdersProducts';
 import axios from 'axios';
+const moment = require('moment');
 
 class UpdateOrders extends Component {
 
@@ -11,10 +12,12 @@ class UpdateOrders extends Component {
         this.state = {
             orders: [],
             selectedOrder: null,
-            products: [],
+            orderProducts: [],
+            allProducts:[],
             people: [],
             product:null,
             writer:null,
+            date: moment().format('L'),
         }
     }
 
@@ -26,9 +29,10 @@ class UpdateOrders extends Component {
     getOrders = () => {
         console.log('in get orders');
 
-        let userId = { id: this.props.reduxStore.user.id }
+        let userId = { id: this.props.reduxStore.user.id,
+                        date: this.state.date }
         axios({
-            method: 'POST',
+            method: 'GET',
             url: '/api/dashboardGet',
             data: userId,
         }).then((response) => {
@@ -55,7 +59,20 @@ class UpdateOrders extends Component {
             console.log('error in getPerson', error);    
         })
     }
-
+    selectOldProduct = (event)=>{
+        let orderId = {id:this.state.selectedOrder}
+        axios({
+            method:'POST',
+            url:'/api/updateorders/oldproducts',
+            data:orderId,
+        }).then((response)=>{
+            this.setState({
+                allProducts:response.data
+            })
+        }).catch((error) => {
+            console.log('error in selectedOldProduct', error);
+        })
+    }
     getProducts = (event) =>{
         let orderId = {id:this.state.selectedOrder}
         axios({
@@ -64,7 +81,7 @@ class UpdateOrders extends Component {
             data: orderId,
         }).then((response)=>{
             this.setState({
-                products:response.data
+                orderProducts:response.data
             })
         }).catch((error)=>{
             console.log('error in getProducts',error);   
@@ -121,9 +138,11 @@ class UpdateOrders extends Component {
     }
 
     render() {
+    
         let orderWriterContent;
         let orderHeader;
-        let addProductContent;
+        let addNewProduct;
+        let addOldProduct;
         if (this.state.selectedOrder != null) { 
             orderWriterContent =<div><select onChange={this.setWriter}>
                 <option value='' disabled selected > Select a Crew Member</option>
@@ -134,26 +153,34 @@ class UpdateOrders extends Component {
             <button onClick={this.updateWriter}>Update Writer</button></div> 
 
             orderHeader = <h1>Update Order: {this.state.orders.map((order) => {
-                if (order.order_id == this.state.selectedOrder) {
+                if (order.id == this.state.selectedOrder) {
                     return (order.order_name)
                 }
             })}</h1>
+            addOldProduct=
+            <div>
+                Add Existing Product 
+                <select onChange={this.selectOldProduct}>
+                    <option value='' disabled selected> Select Product
 
-            addProductContent=
-                <div> <input type="text" placeholder="product name" 
+                    </option>
+                </select>
+            </div>
+            addNewProduct=
+                <div>Add New Product <input type="text" placeholder="product name" 
                         onChange={this.setProduct}/>
                 <button onClick={this.addProduct}>Add Product</button> </div>
         }else{
             orderHeader = <h1>Update Orders</h1>
         }
         let currentWriter;
-        if(this.state.products.length>0){
-            currentWriter = <h3>Current Writer: {this.state.products[0].username}</h3>
+        if (this.state.orderProducts.length>0){
+            currentWriter = <h3>Current Writer: {this.state.orderProducts[0].username}</h3>
         }
         return (
             <div>
                 {orderHeader}
-
+                
                 {/* {JSON.stringify(this.state.products)} */}
                 {/* {JSON.stringify(this.state.selectedOrder)} */}
                 {/* <p>{JSON.stringify(this.state.historyQuery)}</p>
@@ -162,7 +189,7 @@ class UpdateOrders extends Component {
                 <select onChange={this.setOrder}>
                     <option value="" disabled selected>Select an Order</option>
                     {this.state.orders.map((order) => {
-                        return (<option value={order.order_id}>{order.order_name}</option>)
+                        return (<option value={order.id}>{order.order_name}</option>)
                     })}
                 </select>
                 {/* <button onClick={this.getHistory}>Show history</button> */}
@@ -174,11 +201,12 @@ class UpdateOrders extends Component {
                 {currentWriter}
                 <br></br>
                 <ul>
-                {this.state.products.map((product) => {
+                    {this.state.orderProducts.map((product) => {
                     return (<UpdateOrdersProducts 
                     getProducts={this.getProducts} product={product}/>)
                 })}</ul>
-                {addProductContent}
+                {addOldProduct}
+                {addNewProduct}
                 <br></br>
             </div>
         )

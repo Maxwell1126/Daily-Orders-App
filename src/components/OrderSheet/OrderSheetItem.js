@@ -2,6 +2,13 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
+import Fab from '@material-ui/core/Fab';
+import TableRow from '@material-ui/core/TableRow';
+import TableCell from '@material-ui/core/TableCell';
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableHead from '@material-ui/core/TableHead';
+import Card from '@material-ui/core/Card';
 import './OrderSheetItem.css'
 class OrderSheet extends Component {
     componentDidMount() {
@@ -14,38 +21,59 @@ class OrderSheet extends Component {
     // 
 
     upCount = () => {
-        this.props.upQuantity(this.props.i)        
+        this.props.upQuantity(this.props.i)
     }
     downCount = () => {
         this.props.downQuantity(this.props.i)
     }
 
     render() {
-        
+
         let productContent;
-        if (this.props.currentDate > this.props.date 
-            || (this.props.statusId>=3 && this.props.manager==false)) {
-            productContent = <Grid container
-                direction="row"
-                justify="space-evenly"
-                alignItems="center"><h4>{this.props.product.product_name}</h4>
-                <h4>{this.props.product.quantity}</h4></Grid>
+        if (this.props.currentDate > this.props.date
+            || (this.props.statusId >= 3 && this.props.manager == false)) {
+            productContent = <Grid
+                container
+                style={{ padding: 20 }}
+                direction="column"
+                justify="space-between"
+                alignItems="space-between">
+                <TableRow><Grid
+                    container
+                    style={{ padding: 20 }}
+                    direction="row"
+                    justify="space-between"
+                    alignItems="space-between">
+                    <TableCell><h4 >{this.props.product.product_name}</h4></TableCell>
+                    <TableCell><h4 >{this.props.product.quantity}</h4></TableCell>
+                    </Grid>
+                </TableRow>
+            </Grid>
+
         } else {
             productContent = <Grid container
+
                 direction="row"
                 justify="space-evenly"
                 alignItems="center"><h4 className="prodName">
-                {this.props.product.product_name}</h4>
+                    {this.props.product.product_name}</h4>
                 <div className="buttonQuantity">
-                <Grid container
-                    direction="row"
-                    justify="space-evenly"
-                    alignItems="center">< button onClick = { this.upCount } > +</button >
-                <h4>{this.props.product.quantity}</h4>
-                        < button onClick={this.downCount} > -</button ></Grid> </div></Grid>
+                    <Grid container
+
+                        direction="row"
+                        justify="space-evenly"
+                        alignItems="center">< Fab variant="outlined" size="small" onClick={this.upCount} > +</Fab >
+                        <h4>{this.props.product.quantity}</h4>
+                        < Fab variant="outlined" size="small" onClick={this.downCount} > -</Fab ></Grid> </div></Grid>
         }
-        return (<div>
-            {productContent}</div>)
+        return (<Grid
+            container
+            direction="row"
+            justify="space-between"
+            alignItems="center"
+            style={{ padding: 10 }}
+        >
+            {productContent}</Grid>)
     }
 }
 // Instead of taking everything from state, we just want the user info.

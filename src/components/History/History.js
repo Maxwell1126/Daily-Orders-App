@@ -1,6 +1,18 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import axios from 'axios';
+import TextField from '@material-ui/core/TextField';
+import Button from '@material-ui/core/Button';
+import Select from '@material-ui/core/Select';
+import MenuItem from '@material-ui/core/MenuItem';
+import InputLabel from '@material-ui/core/InputLabel';
+import { Menu } from '@material-ui/core';
+import Card from '@material-ui/core/Card';
+import Grid from '@material-ui/core/Grid';
+import FormHelperText from '@material-ui/core/FormHelperText';
+import FormControl from '@material-ui/core/FormControl';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
 const moment = require('moment');
 let orderHeader;
 let dateHeader;
@@ -101,32 +113,35 @@ constructor(){
         }
         return (
             <div>
+                <Grid contianer
+                    direction="column"
+                    justify="flex-start"
+                    alignItems="center">
+                    <Card className="dateToggle">
                 <h1>History</h1>
-                {/* <p>{JSON.stringify(this.state.historyQuery)}</p>
-                <p>{JSON.stringify(this.state.products)}</p> */}
-                {/* <p>{JSON.stringify(this.props.reduxStore.products)}</p> */}
-                <input type="date" onChange={this.setDate}/>
-                <select onChange={this.setOrder}>
-                    <option value="" disabled selected>Select an Order</option>
-                    {this.state.orders.map((order) => {
-                        return (<option value={order.order_id}>{order.order_name}</option>)
-                    })}
-                </select>
-                <button onClick={this.getHistory}>Show history</button>
+                <TextField type="date" onChange={this.setDate}/>
                 <br></br>
+                <Select variant="outlined" name="Order Name" onChange={this.setOrder}>
+                    {/* <MenuItem value="" disabled>Order Name</MenuItem> */}
+                    {this.state.orders.map((order) => {
+                        return (<MenuItem value={order.order_id}>{order.order_name}</MenuItem>)
+                    })}
+                </Select>
+                <Button variant="outlined"onClick={this.getHistory}>Show history</Button>
                 {orderHeader} {dateHeader}
                 {noteHeader}
-                <ul>
+                <List>
                     {this.state.notes.map((note) => {
-                        return <li>{note.note_entry}</li>
+                        return <ListItem>{note.note_entry}</ListItem>
                     })}
-                </ul>
-                <br></br>
+                </List>
                 
                 <div>{this.props.reduxStore.products.map((product)=>{
                     return<div>{product.product_name} {product.quantity}</div>
                 })}</div>
                 <br></br>
+                </Card>
+                </Grid>
             </div>
         )
     }

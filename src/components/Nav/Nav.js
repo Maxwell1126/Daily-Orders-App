@@ -13,6 +13,7 @@ const Nav = (props) => (
     </Link>
     
     <div className="nav-right"
+      
     >
       <Link className="nav-link" to="/home">
         {/* Show this link if they are logged in or not,
@@ -37,7 +38,7 @@ const Nav = (props) => (
           </Link>
       )}
       {props.user.id && (
-        <LogOutButton className="nav-link" />
+        <LogOutButton className="nav-link"/>
       )}
     </div>
   </div>

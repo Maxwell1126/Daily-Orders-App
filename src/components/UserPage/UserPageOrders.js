@@ -7,9 +7,9 @@ import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
-import Paper from '@material-ui/core/Paper';
 import Card from '@material-ui/core/Card';
 import Grid from '@material-ui/core/Grid';
+import { CardContent } from '@material-ui/core';
 const moment = require('moment');
 moment().format();
 class UserPageOrders extends Component {
@@ -61,6 +61,13 @@ class UserPageOrders extends Component {
                 justify="space-evenly"
                 alignItems="stretch">
             <Card >
+                    
+                    <Grid
+                    container
+                    justify="center"
+                    alignItems="center">
+                        <strong>Your Orders</strong>
+                    </Grid>
                 <Table >
                     <TableHead>
                         <TableRow>

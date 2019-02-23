@@ -3,7 +3,8 @@ import { connect } from 'react-redux';
 import UserPageOrders from './UserPageOrders';
 import ManagerPageOrders from './ManagerPageOrders';
 import Grid from '@material-ui/core/Grid';
-
+import Card from '@material-ui/core/Card';
+import './UserPage.css'
 const moment = require('moment');
 const currentDate = moment().format('L')
 class UserPage extends Component {
@@ -24,15 +25,15 @@ render(){
   }
   return(
     <div>
+      
     <Grid
       container
       direction="column"
-      justify="flex-start"
       alignItems="center"
-      spacing={0}
     >
-      <h2>Welcome, {this.props.user.username}</h2>
-      <h4>Today's Date<br></br>{currentDate}</h4>
+      <h1>Welcome, {this.props.user.username}</h1>
+      <h3>Today's Date<br></br>{currentDate}</h3>
+
     </Grid> 
       <Grid
         container
@@ -41,9 +42,10 @@ render(){
         alignItems="center"
 
       >
-       
      {userPageContent}
+     
       </Grid>
+   
     </div>
   )
 }

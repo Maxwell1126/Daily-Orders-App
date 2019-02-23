@@ -34,7 +34,8 @@
 }
 
 .nav-right {
-  float: right
+  justify-content: flex-end;
+  width:100%;
 }
 
 .sticky {

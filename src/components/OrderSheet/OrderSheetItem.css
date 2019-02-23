@@ -5,3 +5,8 @@ width: 50%;
 .buttonQuantity{
 width:50%;
 }
+
+.orderToggle{
+    margin:10px;
+    padding:10px;
+}

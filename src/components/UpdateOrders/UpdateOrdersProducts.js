@@ -3,11 +3,6 @@ import { connect } from 'react-redux';
 import axios from 'axios';
 class UpdateOrdersProducts extends Component {
 
-    getProjects = () => {
-        const action = { type: 'FETCH_PROJECTS' };
-        this.props.dispatch(action);
-    }
-
     deleteProduct = () => {
         axios({
             method: 'DELETE',
@@ -23,6 +18,7 @@ class UpdateOrdersProducts extends Component {
 
         return (
             <li>
+                {JSON.stringify(this.props.product.id)}
                 {this.props.product.product_name}
                 {<button onClick={this.deleteProduct}>Delete</button>}
             </li>)

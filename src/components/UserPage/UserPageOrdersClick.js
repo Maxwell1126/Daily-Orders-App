@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import axios from 'axios';
 import TableRow from '@material-ui/core/TableRow';
 import TableCell from '@material-ui/core/TableCell';
+import Grid from '@material-ui/core/Grid';
 const moment = require('moment');
 
 class UserPageOrders extends Component {
@@ -48,13 +49,11 @@ this.state={
             orderContent = <TableRow onClick={this.toOrderSheet}>
                 <TableCell>{this.props.order.order_name}</TableCell>
                 <TableCell>{this.props.order.username}</TableCell>
-                </TableRow>
+            </TableRow>
         }else{
             orderContent = <TableRow onClick={this.toOrderSheet}>
-                {/* {JSON.stringify(this.props)} */}
-                {/* {JSON.stringify(this.props.order)} */}
                 <TableCell>{this.props.order.order_name}</TableCell>
-                <TableCell>{statusName}</TableCell></TableRow>
+                        <TableCell>{statusName}</TableCell></TableRow>
         }
         return (orderContent)
     }

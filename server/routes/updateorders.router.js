@@ -26,6 +26,31 @@ router.post('/products', (req, res) => {
     }
 });
 
+router.post('/oldproducts', (req,res)=>{
+    if (req.isAuthenticated) {
+        (async () => {
+            const client = await pool.connect();
+            try {
+                await client.query('BEGIN');
+                let queryText =`SELECT "product_id" FROM "order_product";`;
+                let results = await client.query(queryText, values);
+                 
+
+            } catch (e) {
+                console.log('ROLLBACK', e);
+                await client.query('ROLLBACK');
+                throw e;
+            } finally {
+                client.release();
+            }
+        })().catch((error) => {
+            console.log('error in updateorders post oldproducts', error);
+            res.sendStatus(500);
+        })
+    } else {
+        res.sendStatus(403);
+    }
+})
 
 router.get('/', (req, res) => {
     if (req.isAuthenticated) {
@@ -85,10 +110,6 @@ router.delete('/:id', (req, res) => {
                 let queryText = `DELETE FROM "order_product" WHERE "product_id"=$1`;
                 let values = [req.params.id];
                 let results = await client.query(queryText, values);
-
-                queryText = `DELETE FROM "product" WHERE "id" =$1;`;
-                values = [req.params.id];
-                results = await client.query(queryText, values);
                 await client.query('COMMIT');
                 res.sendStatus(201)
             } catch (e) {

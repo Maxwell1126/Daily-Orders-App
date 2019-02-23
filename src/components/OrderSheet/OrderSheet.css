@@ -5,4 +5,9 @@ margin: 0 auto;
 .dateToggle{
     margin:10px;
     padding:10px;
+    background-color:whitesmoke;
+}
+
+.addNoteText{
+margin:100%
 }
