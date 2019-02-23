@@ -26,27 +26,16 @@ router.post('/products', (req, res) => {
     }
 });
 
-router.post('/oldproducts', (req,res)=>{
+router.get('/oldproducts', (req,res)=>{
     if (req.isAuthenticated) {
-        (async () => {
-            const client = await pool.connect();
-            try {
-                await client.query('BEGIN');
-                let queryText =`SELECT "product_id" FROM "order_product";`;
-                let results = await client.query(queryText, values);
-                 
-
-            } catch (e) {
-                console.log('ROLLBACK', e);
-                await client.query('ROLLBACK');
-                throw e;
-            } finally {
-                client.release();
-            }
-        })().catch((error) => {
-            console.log('error in updateorders post oldproducts', error);
+        let queryText=`SELECT * FROM "product"
+        WHERE "id" NOT IN(SELECT"product_id" FROM "order_product");`;
+        pool.query(queryText).then((results)=>{
+            res.send((results.rows))
+        }).catch((error) => {
+            console.log('error in updateorders oldproducts', error);
             res.sendStatus(500);
-        })
+        });
     } else {
         res.sendStatus(403);
     }
@@ -65,6 +54,22 @@ router.get('/', (req, res) => {
         res.sendStatus(403);
     }
 });
+
+router.post('/old',(req,res)=>{
+    if (req.isAuthenticated) {
+    let queryText = `INSERT INTO "order_product"("product_id","order_id")
+                            VALUES($1,$2);`;
+    let values = [req.body.name, req.body.id]
+    pool.query(queryText,values).then((results)=>{
+        res.sendStatus(201);
+    }).catch((error) => {
+        console.log('error in updateorders post old', error);
+        res.sendStatus(500);
+    });
+    } else {
+        res.sendStatus(403);
+    }
+})
 
 router.post('/add', (req, res) => {
     if (req.isAuthenticated) {

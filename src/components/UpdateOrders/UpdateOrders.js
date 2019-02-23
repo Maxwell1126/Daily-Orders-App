@@ -15,6 +15,7 @@ class UpdateOrders extends Component {
             orderProducts: [],
             allProducts:[],
             people: [],
+            oldProduct:null,
             product:null,
             writer:null,
             date: moment().format('L'),
@@ -24,6 +25,7 @@ class UpdateOrders extends Component {
     componentDidMount() {
         this.getOrders();
         this.getPerson();
+        this.getOldProduct();
     }
 
     getOrders = () => {
@@ -59,12 +61,10 @@ class UpdateOrders extends Component {
             console.log('error in getPerson', error);    
         })
     }
-    selectOldProduct = (event)=>{
-        let orderId = {id:this.state.selectedOrder}
+    getOldProduct = (event)=>{
         axios({
-            method:'POST',
+            method:'GET',
             url:'/api/updateorders/oldproducts',
-            data:orderId,
         }).then((response)=>{
             this.setState({
                 allProducts:response.data
@@ -73,6 +73,31 @@ class UpdateOrders extends Component {
             console.log('error in selectedOldProduct', error);
         })
     }
+
+    setOldProduct=(event)=>{
+        this.setState({
+            ...this.state.oldProduct, oldProduct: event.target.value,
+        })
+    }
+
+    addOldProduct = (event) => {
+        console.log('in addOldProduct');
+        
+        let productToAdd = {
+            name: this.state.oldProduct,
+            id: this.state.selectedOrder
+        }
+        axios({
+            method: 'POST',
+            url: '/api/updateorders/old',
+            data: productToAdd
+        }).then((response) => {
+            this.getProducts();
+        }).catch((error) => {
+            console.log('error in addProduct', error);
+        })
+    }
+
     getProducts = (event) =>{
         let orderId = {id:this.state.selectedOrder}
         axios({
@@ -92,8 +117,7 @@ class UpdateOrders extends Component {
         this.setState({
             ...this.state.selectedOrder, selectedOrder: event.target.value,
         }, () => {
-            this.getProducts()
-        }, ()=>{    
+            this.getProducts() 
         });
     }
 
@@ -160,11 +184,14 @@ class UpdateOrders extends Component {
             addOldProduct=
             <div>
                 Add Existing Product 
-                <select onChange={this.selectOldProduct}>
-                    <option value='' disabled selected> Select Product
-
-                    </option>
+                <select onChange={this.setOldProduct}>
+                    <option value='' disabled selected> Select Product</option>
+                    {this.state.allProducts.map((product)=>{
+                        return (<option value={product.id}>
+                            {product.product_name}</option>)
+                    })}
                 </select>
+                <button onClick={this.addOldProduct}>Add Old Product</button>
             </div>
             addNewProduct=
                 <div>Add New Product <input type="text" placeholder="product name" 
@@ -181,8 +208,8 @@ class UpdateOrders extends Component {
             <div>
                 {orderHeader}
                 
-                {/* {JSON.stringify(this.state.products)} */}
-                {/* {JSON.stringify(this.state.selectedOrder)} */}
+                {JSON.stringify(this.state.oldProduct)}
+                {JSON.stringify(this.state.selectedOrder)}
                 {/* <p>{JSON.stringify(this.state.historyQuery)}</p>
                 <p>{JSON.stringify(this.state.products)}</p> */}
                 {/* <p>{JSON.stringify(this.props.reduxStore.products)}</p> */}
