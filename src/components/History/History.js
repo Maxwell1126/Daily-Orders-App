@@ -116,6 +116,7 @@ constructor(){
         }
         return (
             <div>
+                {JSON.stringify(this.state.historyQuery)}
                 <Grid contianer
                     direction="column"
                     justify="flex-start"
@@ -126,6 +127,7 @@ constructor(){
                         <FormControl>
                             <InputLabel>Order Name</InputLabel>
                 <select variant="outlined" fullWidth name="Order Name" onChange={this.setOrder}>
+                                <option value='' disabled selected > Select an Order</option>
                     {this.state.orders.map((order) => {
                         return (<option value={order.order_id}>{order.order_name}</option>)
                     })}

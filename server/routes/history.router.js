@@ -8,7 +8,7 @@ const router = express.Router();
 router.post('/', (req, res) => {
     if (req.isAuthenticated) {
         (async () => {
-            console.log('wreck body: ', req.body);
+            //console.log('wreck body: ', req.body);
             const client = await pool.connect();
             try {
                 await client.query('BEGIN');
@@ -18,7 +18,7 @@ router.post('/', (req, res) => {
                 let values=[req.body.date, req.body.order]
                 let response = await client.query(queryText,values)
                 const responseId = response.rows[0].id
-                console.log('responseId:', responseId);
+               // console.log('responseId:', responseId);
                 
                 
                 queryText = `SELECT "product"."id", "product"."product_name", 

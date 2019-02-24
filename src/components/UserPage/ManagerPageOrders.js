@@ -16,33 +16,37 @@ moment().format();
 class ManagerPageOrders extends Component {
     constructor(props) {
         super(props)
+        this.state = {
+            orders: [],
+            date: moment().format('L'),
+        }
     }
 
     componentDidMount() {
         this.getOrders();
     }
 
-    getOrders = () => {
-        const action = { type: 'GET_ORDERS' };
-        this.props.dispatch(action);
-    }
     // getOrders = () => {
-    //     console.log('in get orders');
+    //     const action = { type: 'GET_ORDERS' };
+    //     this.props.dispatch(action);
+    // }
+    getOrders = () => {
+        console.log('in get orders');
 
-    //     let userId = {
-    //         id: this.props.reduxStore.user.id,
-    //         date: this.state.date,
-    //     }
-    //     axios({
-    //         method: 'POST',
-    //         url: '/api/dashboardGet',
-    //         data: userId,
-    //     }).then((response) => {
-    //         this.setState({
-    //             orders: response.data
-    //         })
-    //     })
-
+        let userId = {
+            //id: this.props.reduxStore.user.id,
+            date: this.state.date,
+        }
+        axios({
+            method: 'POST',
+            url: '/api/dashboardGet',
+            data: userId,
+        }).then((response) => {
+            this.setState({
+                orders: response.data
+            })
+        })
+    }
     toOrderSheet = (event) => {
         this.props.history.push('/home:/id')
     }
@@ -64,7 +68,7 @@ class ManagerPageOrders extends Component {
                         alignItems="stretch"
                     style={{ padding: 20 }}>
                 <Card >
-                    <CardContent><strong>Order's Pending Apporoval</strong>
+                    <CardContent><strong>Orders Pending Apporoval</strong>
                     </CardContent>
                     <Table >
                         <TableHead alignItems="center">        
@@ -73,7 +77,7 @@ class ManagerPageOrders extends Component {
                                 <TableCell>Writer</TableCell>
                             </TableRow>
                         </TableHead>
-                        <TableBody>{this.props.reduxStore.orders.map((order) => {
+                        <TableBody>{this.state.orders.map((order) => {
                             if (order.status_id == 2) {
                                 return (<UserPageOrdersClick key={order.id} order={order}
                                     history={this.props.history}
@@ -90,7 +94,7 @@ class ManagerPageOrders extends Component {
                         alignItems="stretch"
                         style={{ padding: 20 }}>
                 <Card >
-                    <CardContent><strong>Order's Incomplete</strong>
+                    <CardContent><strong>Orders Incomplete</strong>
                     </CardContent>
                     <Table >
                         <TableHead>
@@ -99,7 +103,7 @@ class ManagerPageOrders extends Component {
                                 <TableCell>Writer</TableCell>
                             </TableRow>
                         </TableHead>
-                        <TableBody>{this.props.reduxStore.orders.map((order) => {
+                        <TableBody>{this.state.orders.map((order) => {
                             if (order.status_id == 1) {
                                 return (<UserPageOrdersClick key={order.id} order={order}
                                     history={this.props.history}
@@ -117,7 +121,7 @@ class ManagerPageOrders extends Component {
                         style={{ padding: 20 }}>
                 <Card >
                     <CardContent>
-                        <strong>Order's Approved</strong>
+                        <strong>Orders Approved</strong>
                     </CardContent>
                     <Table >
                         <TableHead>
@@ -127,7 +131,7 @@ class ManagerPageOrders extends Component {
                                 <TableCell>Writer</TableCell>
                             </TableRow>
                         </TableHead>
-                        <TableBody>{this.props.reduxStore.orders.map((order) => {
+                        <TableBody>{this.state.orders.map((order) => {
                             if (order.status_id == 4) {
                                 return (<UserPageOrdersClick key={order.id} order={order}
                                     history={this.props.history}

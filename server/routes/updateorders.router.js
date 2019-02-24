@@ -27,11 +27,11 @@ router.post('/products', (req, res) => {
     }
 });
 
-router.get('/oldproducts', (req,res)=>{
+router.get('/oldproducts', (req, res) => {
     if (req.isAuthenticated) {
-        let queryText=`SELECT * FROM "product"
+        let queryText = `SELECT * FROM "product"
         WHERE "id" NOT IN(SELECT"product_id" FROM "order_product");`;
-        pool.query(queryText).then((results)=>{
+        pool.query(queryText).then((results) => {
             res.send((results.rows))
         }).catch((error) => {
             console.log('error in updateorders oldproducts', error);
@@ -56,17 +56,46 @@ router.get('/', (req, res) => {
     }
 });
 
-router.post('/old',(req,res)=>{
+router.post('/old', (req, res) => {
     if (req.isAuthenticated) {
-    let queryText = `INSERT INTO "order_product"("product_id","order_id")
+        (async () => {
+            const client = await pool.connect();
+            try {
+                await client.query('BEGIN');
+                let queryText = `INSERT INTO "order_product"("product_id","order_id")
                             VALUES($1,$2);`;
-    let values = [req.body.name, req.body.id]
-    pool.query(queryText,values).then((results)=>{
-        res.sendStatus(201);
-    }).catch((error) => {
-        console.log('error in updateorders post old', error);
-        res.sendStatus(500);
-    });
+                let values = [req.body.name, req.body.id]
+                let results = await client.query(queryText, values);
+
+                queryText = `SELECT * FROM "fulfillment" WHERE "date" >= CURRENT_DATE
+                             AND "order_id"=$1;`;
+                values = [req.body.id]
+                results = await client.query(queryText, values);
+
+                let i = 0;
+                while (i < results.rows.length) {
+
+                    queryText = `INSERT INTO "product_fulfillment"("fulfillment_id",
+                                                                   "product_id")
+                                 VALUES($1,$2);`;
+                    values = [results.rows[i].id, req.body.name]
+                    i++
+                    await client.query(queryText, values)
+                }
+
+                await client.query('COMMIT');
+                res.send(results.rows)
+            } catch (e) {
+                console.log('ROLLBACK', e);
+                await client.query('ROLLBACK');
+                throw e;
+            } finally {
+                client.release();
+            }
+        })().catch((error) => {
+            console.log('error in updateorders post old', error);
+            res.sendStatus(500);
+        });
     } else {
         res.sendStatus(403);
     }
@@ -89,6 +118,21 @@ router.post('/add', (req, res) => {
                 values = [resultsId, req.body.id];
                 results = await client.query(queryText, values);
 
+                queryText = `SELECT * FROM "fulfillment" WHERE "date" >= CURRENT_DATE
+                             AND "order_id"=$1;`;
+                values = [req.body.id]
+                results = await client.query(queryText, values);
+
+                let i = 0;
+                while (i < results.rows.length) {
+
+                    queryText = `INSERT INTO "product_fulfillment"("fulfillment_id",
+                                                                   "product_id")
+                                 VALUES($1,$2);`;
+                    values = [results.rows[i].id, resultsId]
+                    i++
+                    await client.query(queryText, values)
+                }
                 await client.query('COMMIT');
                 res.send(results.rows)
             } catch (e) {
@@ -116,6 +160,21 @@ router.delete('/:id', (req, res) => {
                 let queryText = `DELETE FROM "order_product" WHERE "product_id"=$1`;
                 let values = [req.params.id];
                 let results = await client.query(queryText, values);
+
+                queryText = `SELECT * FROM "fulfillment" WHERE "date" >= CURRENT_DATE;`
+                results = await client.query(queryText);
+
+                let i = 0;
+                while (i < results.rows.length) {
+
+                    queryText = `DELETE FROM "product_fulfillment"
+                                 WHERE "fulfillment_id" = $1
+                                 AND "product_id" = $2;`;
+                    values = [results.rows[i].id, req.params.id]
+                    i++
+                    await client.query(queryText, values)
+                }
+
                 await client.query('COMMIT');
                 res.sendStatus(201)
             } catch (e) {
@@ -149,8 +208,8 @@ router.put('/', (req, res) => {
                 queryText = `UPDATE "fulfillment" SET "person_id"=$1
                              WHERE "fulfillment"."date" >= CURRENT_DATE
                              AND "fulfillment"."order_id" = $2;`;
-                values = [req.body.id,req.body.orderId];
-                results = await client.query(queryText,values);
+                values = [req.body.id, req.body.orderId];
+                results = await client.query(queryText, values);
 
                 await client.query('COMMIT');
                 res.sendStatus(201)
@@ -162,9 +221,9 @@ router.put('/', (req, res) => {
                 client.release();
             }
         })().catch((error) => {
-                    console.log('error in updateorders put', error);
-                    res.sendStatus(500);
-                })
+            console.log('error in updateorders put', error);
+            res.sendStatus(500);
+        })
     } else {
         res.sendStatus(403);
     }

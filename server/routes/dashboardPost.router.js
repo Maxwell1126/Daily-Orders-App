@@ -6,6 +6,7 @@ router.post('/', (req, res) => {
     if (req.isAuthenticated()) {
         //console.log('wreck body: ', req.body);
 
+
         (async () => {
             const client = await pool.connect();
             try {
@@ -15,8 +16,10 @@ router.post('/', (req, res) => {
                                  AND "order_id" = $2;`;
                 let values = [req.body.date,req.body.id]
                 let response = await client.query(queryText, values)
-                console.log('response 18: ', response.rows.length);
-                console.log('rewq body19 ',req.body.order_id);
+                
+                
+                //console.log('response 18: ', response.rows.length);
+                //console.log('rewq body19 ',req.body.order_id);
                 
                 if (response.rows.length == 0) {
                     queryText = `SELECT "person_id" FROM "order" 
@@ -28,12 +31,13 @@ router.post('/', (req, res) => {
                                          ("order_id","person_id")
                                          VALUES($1,$2)
                                          RETURNING "id";`;
-                    values = [req.body.id, response.rows[0]]
+                    values = [req.body.id, response.rows[0].person_id]
+                    console.log('19 req id', response.rows[0].person_id);
                     //let values = [req.body.id, req.body.person];
-                    console.log('wreck body person: ', req.body.person);
-                    console.log('wreck body id: ', req.body.id);
+                    //console.log('wreck body person: ', req.body.person);
+                    //console.log('wreck body id: ', req.body.id);
                     let results = await client.query(queryText, values);
-                    console.log('results 44: ', results);
+                    //console.log('results 44: ', results);
 
                     const resultsId = results.rows[0].id;
 
@@ -44,7 +48,7 @@ router.post('/', (req, res) => {
                             WHERE "order_product"."order_id" =$1;`;
                     values = [req.body.id]
                     let responses = await client.query(queryText, values)
-                    console.log('response', responses.rows);
+                    //console.log('response', responses.rows);
 
 
 

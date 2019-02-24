@@ -7,7 +7,7 @@ router.post('/', (req, res) => {
         
         
         (async () => {
-            console.log('wreck order date 10', req.body.date);
+            //console.log('wreck order date 10', req.body.date);
             const client = await pool.connect();
             try {
                 await client.query('BEGIN');
@@ -16,7 +16,7 @@ router.post('/', (req, res) => {
                                  AND "order_id" = $2;`;
                 let values =[req.body.date,req.body.id]
                 let response = await client.query(queryText, values)
-                console.log('response 19', response);
+                //console.log('response 19', response.rows.length);
                 
                 //console.log('wreck params: ', req.params);
                 
@@ -39,7 +39,7 @@ router.post('/', (req, res) => {
                              ON "product"."id" = "order_product"."product_id" 
                              WHERE "order_product"."order_id" =${req.body.id};`
                     let responses = await client.query(queryText)
-                    console.log('response', responses.rows);
+                    //console.log('response', responses.rows);
 
 
 
@@ -57,6 +57,7 @@ router.post('/', (req, res) => {
                 JOIN "product_fulfillment" ON 
                 "product_fulfillment"."product_id" = "product"."id"
                 WHERE "product_fulfillment"."fulfillment_id" = $1
+                GROUP BY "product"."id","product_fulfillment"."quantity"
                 ORDER BY "product"."id";`
                 values = [resultsId]
                 results =await client.query(queryText,values)
@@ -65,6 +66,8 @@ router.post('/', (req, res) => {
                 res.send(results.rows)
                 }else{
                     const responseId = response.rows[0].id
+                    console.log('responseId 69', responseId);
+                    
                     queryText = `SELECT "product"."id", "product"."product_name", 
                 "product_fulfillment"."quantity", "fulfillment"."status_id" FROM "product" 
                 JOIN "product_fulfillment" ON 
@@ -73,10 +76,11 @@ router.post('/', (req, res) => {
                 WHERE "product_fulfillment"."fulfillment_id" = $1
                 ORDER BY "product"."id";`
                     values = [responseId]
-                    results = await client.query(queryText, values)
-
+                    let final = await client.query(queryText, values)
+                    console.log('results 80', final.rows);
+                    
                     await client.query('COMMIT');
-                    res.send(results.rows)
+                    res.send(final.rows)
                 }
             }catch (e) {
                 console.log('ROLLBACK', e);
@@ -97,7 +101,7 @@ router.post('/', (req, res) => {
 
 router.put('/', (req, res) => {
     if (req.isAuthenticated) {
-        console.log('wreck body button: ', req.body.button);
+        //console.log('wreck body button: ', req.body.button);
         
         (async () => {
             const client = await pool.connect();
@@ -109,7 +113,7 @@ router.put('/', (req, res) => {
                 let value= [req.body.date,req.body.id]
                 let response = await client.query(queryText, value)
                 const responseId = response.rows[0].id
-                console.log('responseId: ',responseId);
+               // console.log('responseId: ',responseId);
                 
                 // queryText = `SELECT "product"."product_name" FROM "product" 
                 // JOIN "product_fulfillment" ON 
@@ -123,8 +127,8 @@ router.put('/', (req, res) => {
                 let i = 0;
                 while(i< req.body.products.length){
                     // console.log('wreck ', wreck);
-                    console.log('i',i);
-                    console.log('products: ', req.body.products[i].quantity);
+                   // console.log('i',i);
+                   // console.log('products: ', req.body.products[i].quantity);
                     
                     queryText = `UPDATE "product_fulfillment" 
                              SET "quantity" =$1

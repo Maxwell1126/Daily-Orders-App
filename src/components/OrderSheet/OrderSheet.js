@@ -42,6 +42,7 @@ class OrderSheet extends Component {
 
         let userInfo = {
             id: this.props.reduxStore.user.id,
+            orderId: this.props.match.params.id,
             date: this.state.date,
         }
         axios({
@@ -57,17 +58,24 @@ class OrderSheet extends Component {
     }
     getProducts = (event) => {
         console.log('in getproducts');
+        let personId;
+        for (let i = 0; i<this.state.orders.length;i++){
+            if(i.order_id==this.props.match.params.id){
+                personId=i.person_id
+            }
+        }
         let orderDetails = {
             id: this.props.match.params.id,
             date: this.state.date,
-            person: this.props.reduxStore.user.id
+            person: personId
         }
         axios({
             method: 'POST',
             url: '/api/ordersheet/',
             data: orderDetails,
         }).then((response) => {
-            ;
+            console.log('response.data', response.data);
+            
             this.setState({
                 products: response.data,
             })
@@ -202,23 +210,18 @@ class OrderSheet extends Component {
         }
     }
 
-    backDay = (event) => {
-        this.setState({
+    backDay = async (event) => {
+        await this.setState({
             date: moment(this.state.date).subtract(1, 'days').format('L'),
-        }, () => {
-            this.getOrders()
-            this.getProducts()
-            this.getNotes()
-        });
-    }
+        })
+        await this.componentDidMount()
+        };
 
     forwardDay = async (event) => {
         await this.setState({
             date: moment(this.state.date).add(1, 'days').format('L'),
         });
-        await this.getOrders()
-        await this.getProducts()
-        await this.getNotes()
+        await this.componentDidMount()
     };
 
     render() {
@@ -292,6 +295,7 @@ class OrderSheet extends Component {
 
         return (
             <div className="main">
+            {JSON.stringify(this.state.products)}
             <Grid contianer 
             direction="column"
                 justify="flex-start"
@@ -307,6 +311,7 @@ class OrderSheet extends Component {
                 >
                         
                     {this.state.orders.map((order) => {
+                        
                         if (order.order_id == this.props.match.params.id) {
                             return (<h1>{order.order_name}</h1>)
                         }

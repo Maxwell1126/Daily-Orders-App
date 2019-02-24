@@ -62,9 +62,9 @@ class OrderSheet extends Component {
 
                         direction="row"
                         justify="space-evenly"
-                        alignItems="center">< Fab variant="outlined" size="small" onClick={this.upCount} > +</Fab >
+                        alignItems="center">< Fab variant="outlined" size="small" onClick={this.downCount} >-</Fab >
                         <h4>{this.props.product.quantity}</h4>
-                        < Fab variant="outlined" size="small" onClick={this.downCount} > -</Fab ></Grid> </div></Grid>
+                        < Fab variant="outlined" size="small" onClick={this.upCount} >+</Fab ></Grid> </div></Grid>
         }
         return (<Grid
             container

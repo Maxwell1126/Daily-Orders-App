@@ -18,35 +18,42 @@ router.get('/',(req,res) =>{
 })
 
 router.post('/', (req, res) => {
-
+    console.log('in dashboardget post');
     if (req.isAuthenticated()) {
         
         (async () => {
             const client = await pool.connect();
             try {
+                
                 await client.query('BEGIN');
                 if (req.user.manager === false) {
-                    let queryText = `SELECT "id" FROM "order" WHERE "person_id"=$1`;
-                    let values = [req.body.id]
+                    let queryText = `SELECT * FROM "order" WHERE "id"=$1`;
+                    let values = [req.body.orderId]
                     let results = await client.query(queryText, values)
-
+                    
+                    //console.log('req.body.date',req.body.date);
+                    
                     for (order of results.rows) {
                         queryText = `SELECT * FROM "fulfillment" 
-                                 WHERE "date" = CURRENT_DATE
-                                 AND "order_id" = $1;`;
-                        values = [order.id]
+                                 WHERE "date" = $1
+                                 AND "order_id" = $2;`;
+                        values = [req.body.date, order.id]
                         results = await client.query(queryText, values)
-                    
+                        let resultRows = results.rows.length
+                   console.log('result 43', resultRows);
+                   
                         if (results.rows.length === 0) {
+                            
                             queryText = `INSERT INTO "fulfillment"
-                                         ("order_id","person_id")
-                                         VALUES($1,$2)
+                                         ("order_id","person_id","date")
+                                         VALUES($1,$2,$3)
                                          RETURNING "id";`;
-                            values = [order.id, req.body.id]
+                            values = [order.id, req.body.id,req.body.date]
                             results = await client.query(queryText, values);
-                        }
+                        
                             const resultsId = results.rows[0].id;
-
+                        console.log('resultsId', resultsId);
+                        
                             queryText = `SELECT "product"."product_name",
                             "order_product"."product_id"
                             FROM "product" JOIN "order_product" 
@@ -54,14 +61,15 @@ router.post('/', (req, res) => {
                             WHERE "order_product"."order_id" =$1;`;
                             values = [order.id]
                             results = await client.query(queryText, values)
-
+                            if(resultRows===0){
                             for (product of results.rows) {
                                 queryText = `INSERT INTO "product_fulfillment"
                                             ("fulfillment_id","product_id")
                                             VALUES ($1,$2);`;
                                 values = [resultsId, product.product_id];
-                                await client.query(queryText, values);
-                            }}
+                               results = await client.query(queryText, values);
+                                //console.log('results 67', results);
+                            }}}}
                     queryText = `SELECT "fulfillment".*, "order"."order_name",
                         "person"."username"
                     FROM "fulfillment"
@@ -83,17 +91,17 @@ router.post('/', (req, res) => {
 
                     for (order of results.rows) {
                         queryText = `SELECT * FROM "fulfillment" 
-                                 WHERE "date" = CURRENT_DATE
-                                 AND "order_id" = $1;`;
-                        values = [order.id]
+                                 WHERE "date" = $1
+                                 AND "order_id" = $2;`;
+                        values = [req.body.date,order.id]
                         results = await client.query(queryText, values)
 
                         if (results.rows.length === 0) {
                             queryText = `INSERT INTO "fulfillment"
-                                         ("order_id","person_id")
-                                         VALUES($1,$2)
+                                         ("order_id","person_id","date")
+                                         VALUES($1,$2,$3)
                                          RETURNING "id";`;
-                            values = [order.id, order.person_id]
+                            values = [order.id, order.person_id,req.body.date]
                             results = await client.query(queryText, values);
                             const resultsId = results.rows[0].id;
 
@@ -121,11 +129,14 @@ router.post('/', (req, res) => {
                                  "fulfillment"."order_id"
                                  JOIN "person" ON "person"."id" =
                                  "fulfillment"."person_id"
-                                 WHERE "date" = CURRENT_DATE
+                                 WHERE "date" = $1
                                  ORDER BY "fulfillment"."person_id";`;
-                    results = await client.query(queryText);
+                    values = [req.body.date]
+                    let final = await client.query(queryText,values);
+                    console.log('final 136', final);
+                    
                     await client.query('COMMIT');
-                    res.send(results.rows)
+                    res.send(final.rows)
                 }
 
             }
