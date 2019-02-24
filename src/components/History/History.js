@@ -5,6 +5,9 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
+import Input from '@material-ui/core/Input';
+import OutlinedInput from '@material-ui/core/OutlinedInput';
+import FilledInput from '@material-ui/core/FilledInput';
 import InputLabel from '@material-ui/core/InputLabel';
 import { Menu } from '@material-ui/core';
 import Card from '@material-ui/core/Card';
@@ -80,7 +83,7 @@ constructor(){
         this.getNotes();
         orderHeader = <h3>{
             this.state.orders.map((order) => {
-                if (order.order_id == this.state.historyQuery.order) {
+                if (order.id == this.state.historyQuery.order) {
                     return (order.order_name)
                 }
             })}</h3>
@@ -119,15 +122,24 @@ constructor(){
                     alignItems="center">
                     <Card className="dateToggle">
                 <h1>History</h1>
-                <TextField type="date" onChange={this.setDate}/>
-                <br></br>
-                <Select variant="outlined" name="Order Name" onChange={this.setOrder}>
-                    {/* <MenuItem value="" disabled>Order Name</MenuItem> */}
+                <TextField type="date" variant="outlined" fullWidth onChange={this.setDate}/>
+                        <FormControl>
+                            <InputLabel>Order Name</InputLabel>
+                <select variant="outlined" fullWidth name="Order Name" onChange={this.setOrder}>
                     {this.state.orders.map((order) => {
-                        return (<MenuItem value={order.order_id}>{order.order_name}</MenuItem>)
+                        return (<option value={order.order_id}>{order.order_name}</option>)
                     })}
-                </Select>
+                </select>
+                            
+                        </FormControl>
+                        <Grid
+                            container
+                            direction="column"
+                            justify="center"
+                            alignItems="flex-end"
+                        >
                 <Button variant="outlined"onClick={this.getHistory}>Show history</Button>
+                 </Grid>
                 {orderHeader} {dateHeader}
                 {noteHeader}
                 <List>
@@ -139,7 +151,6 @@ constructor(){
                 <div>{this.props.reduxStore.products.map((product)=>{
                     return<div>{product.product_name} {product.quantity}</div>
                 })}</div>
-                <br></br>
                 </Card>
                 </Grid>
             </div>

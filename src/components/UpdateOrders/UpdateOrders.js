@@ -208,8 +208,8 @@ class UpdateOrders extends Component {
             <div>
                 {orderHeader}
                 
-                {JSON.stringify(this.state.oldProduct)}
-                {JSON.stringify(this.state.selectedOrder)}
+                {/* {JSON.stringify(this.state.oldProduct)} */}
+                {/* {JSON.stringify(this.state.selectedOrder)} */}
                 {/* <p>{JSON.stringify(this.state.historyQuery)}</p>
                 <p>{JSON.stringify(this.state.products)}</p> */}
                 {/* <p>{JSON.stringify(this.props.reduxStore.products)}</p> */}

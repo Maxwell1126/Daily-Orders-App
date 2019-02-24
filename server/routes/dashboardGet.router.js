@@ -26,7 +26,43 @@ router.post('/', (req, res) => {
             try {
                 await client.query('BEGIN');
                 if (req.user.manager === false) {
-                    let queryText = `SELECT "fulfillment".*, "order"."order_name",
+                    let queryText = `SELECT "id" FROM "order" WHERE "person_id"=$1`;
+                    let values = [req.body.id]
+                    let results = await client.query(queryText, values)
+
+                    for (order of results.rows) {
+                        queryText = `SELECT * FROM "fulfillment" 
+                                 WHERE "date" = CURRENT_DATE
+                                 AND "order_id" = $1;`;
+                        values = [order.id]
+                        results = await client.query(queryText, values)
+                    
+                        if (results.rows.length === 0) {
+                            queryText = `INSERT INTO "fulfillment"
+                                         ("order_id","person_id")
+                                         VALUES($1,$2)
+                                         RETURNING "id";`;
+                            values = [order.id, req.body.id]
+                            results = await client.query(queryText, values);
+                        }
+                            const resultsId = results.rows[0].id;
+
+                            queryText = `SELECT "product"."product_name",
+                            "order_product"."product_id"
+                            FROM "product" JOIN "order_product" 
+                            ON "product"."id" = "order_product"."product_id" 
+                            WHERE "order_product"."order_id" =$1;`;
+                            values = [order.id]
+                            results = await client.query(queryText, values)
+
+                            for (product of results.rows) {
+                                queryText = `INSERT INTO "product_fulfillment"
+                                            ("fulfillment_id","product_id")
+                                            VALUES ($1,$2);`;
+                                values = [resultsId, product.product_id];
+                                await client.query(queryText, values);
+                            }}
+                    queryText = `SELECT "fulfillment".*, "order"."order_name",
                         "person"."username"
                     FROM "fulfillment"
                     JOIN "order" ON "order"."id" =
@@ -36,8 +72,8 @@ router.post('/', (req, res) => {
                     WHERE "date" = $1
                     AND "fulfillment"."person_id" = $2
                     ORDER BY "order"."id";`;
-                    let values = [req.body.date,req.body.id];
-                    let results = await client.query(queryText, values)
+                    values = [req.body.date,req.body.id];
+                    results = await client.query(queryText, values)
 
                     await client.query('COMMIT');
                     res.send(results.rows)
@@ -86,7 +122,7 @@ router.post('/', (req, res) => {
                                  JOIN "person" ON "person"."id" =
                                  "fulfillment"."person_id"
                                  WHERE "date" = CURRENT_DATE
-                                 ORDER BY "order"."id";`;
+                                 ORDER BY "fulfillment"."person_id";`;
                     results = await client.query(queryText);
                     await client.query('COMMIT');
                     res.send(results.rows)

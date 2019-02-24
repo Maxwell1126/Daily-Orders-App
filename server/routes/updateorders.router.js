@@ -13,7 +13,8 @@ router.post('/products', (req, res) => {
                         ON "product"."id" = "order_product"."product_id" 
                         JOIN "order" ON "order"."id" = "order_product"."order_id"
                         JOIN "person" ON "person"."id" = "order"."person_id"
-                        WHERE "order_product"."order_id" =$1;`;
+                        WHERE "order_product"."order_id" =$1
+                        ORDER BY "product"."id";`;
         let values = [req.body.id]
         pool.query(queryText, values).then((results) => {
             res.send(results.rows)
