@@ -16,6 +16,8 @@ import FormHelperText from '@material-ui/core/FormHelperText';
 import FormControl from '@material-ui/core/FormControl';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
+import TableRow from '@material-ui/core/TableRow';
+import TableCell from '@material-ui/core/TableCell';
 const moment = require('moment');
 let orderHeader;
 let dateHeader;
@@ -83,7 +85,7 @@ constructor(){
         this.getNotes();
         orderHeader = <h3>{
             this.state.orders.map((order) => {
-                if (order.id == this.state.historyQuery.order) {
+                if (order.order_id == this.state.historyQuery.order) {
                     return (order.order_name)
                 }
             })}</h3>
@@ -116,43 +118,77 @@ constructor(){
         }
         return (
             <div>
-                {JSON.stringify(this.state.historyQuery)}
                 <Grid contianer
                     direction="column"
                     justify="flex-start"
                     alignItems="center">
                     <Card className="dateToggle">
+                        <Grid
+                            container
+                            direction="column"
+                            justify="flex-start"
+                            alignItems="center"
+                        >
                 <h1>History</h1>
+                </Grid>
+                <h3>Date</h3>
                 <TextField type="date" variant="outlined" fullWidth onChange={this.setDate}/>
-                        <FormControl>
-                            <InputLabel>Order Name</InputLabel>
-                <select variant="outlined" fullWidth name="Order Name" onChange={this.setOrder}>
-                                <option value='' disabled selected > Select an Order</option>
+                <h3>Order</h3>
+                        <FormControl fullWidth>
+                            {/* <InputLabel >Order Name</InputLabel> */}
+                            <select onChange={this.setOrder}>
+                            {/* // input={ */}
+                            {/* //     <OutlinedInput */}
+                            {/* //         labelWidth={85}
+                            //         name="Order Name"
+                            //     />}   */}
+                                
+                                <option value='' disable selected> Select an Order</option>
                     {this.state.orders.map((order) => {
                         return (<option value={order.order_id}>{order.order_name}</option>)
                     })}
                 </select>
-                            
                         </FormControl>
+                        <Grid container
+                            style={{ paddingTop: 10 }}
+                            justify="flex-end"
+                            direction="row">
+                <Button variant="outlined"onClick={this.getHistory}>Show history</Button>
+                        </Grid>
                         <Grid
                             container
                             direction="column"
-                            justify="center"
-                            alignItems="flex-end"
+                            justify="flex-start"
+                            alignItems="center"
                         >
-                <Button variant="outlined"onClick={this.getHistory}>Show history</Button>
-                 </Grid>
                 {orderHeader} {dateHeader}
+                        </Grid>  
                 {noteHeader}
                 <List>
                     {this.state.notes.map((note) => {
                         return <ListItem>{note.note_entry}</ListItem>
                     })}
                 </List>
-                
-                <div>{this.props.reduxStore.products.map((product)=>{
-                    return<div>{product.product_name} {product.quantity}</div>
-                })}</div>
+                        
+                            
+                        
+                    <Grid
+                        container
+                        style={{ padding: 20 }}
+                        direction="column"
+                        justify="space-between"
+                        alignItems="space-between">{this.props.reduxStore.products.map((product)=>{
+                            return <TableRow><Grid
+                                container
+                                style={{ padding: 20 }}
+                                direction="row"
+                                justify="space-between"
+                                alignItems="space-between">
+                                <TableCell><h4 >{product.product_name}</h4></TableCell>
+                                <TableCell><h4 >{product.quantity}</h4></TableCell>
+                            </Grid>
+                            </TableRow>
+                        })}</Grid>
                 </Card>
                 </Grid>
             </div>

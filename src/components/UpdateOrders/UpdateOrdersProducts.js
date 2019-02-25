@@ -1,5 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import TableCell from '@material-ui/core/TableCell';
+import TableRow from '@material-ui/core/TableRow';
+import Grid from '@material-ui/core/Grid';
+import Button from '@material-ui/core/Button';
 import axios from 'axios';
 class UpdateOrdersProducts extends Component {
 
@@ -17,10 +21,21 @@ class UpdateOrdersProducts extends Component {
     render() {
 
         return (
-            <li>
+            <TableRow><Grid
+                container
+                style={{ padding: 20 }}
+                direction="row"
+                justify="space-between"
+                alignItems="space-between">
+            <TableCell>
                 {this.props.product.product_name}
-                {<button onClick={this.deleteProduct}>Delete</button>}
-            </li>)
+            </TableCell>
+                <TableCell>
+                {<Button variant="outlined"onClick={this.deleteProduct}
+                        >Delete</Button>}
+            </TableCell>
+            </Grid>
+            </TableRow>)
     }
 }
 

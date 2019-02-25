@@ -295,7 +295,6 @@ class OrderSheet extends Component {
 
         return (
             <div className="main">
-            {JSON.stringify(this.state.products)}
             <Grid contianer 
             direction="column"
                 justify="flex-start"

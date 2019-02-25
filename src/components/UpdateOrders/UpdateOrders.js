@@ -2,6 +2,10 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import LogOutButton from '../LogOutButton/LogOutButton';
 import UpdateOrdersProducts from './UpdateOrdersProducts';
+import Card from '@material-ui/core/Card';
+import Grid from '@material-ui/core/Grid';
+import Button from '@material-ui/core/Button';
+
 import axios from 'axios';
 const moment = require('moment');
 
@@ -167,6 +171,18 @@ class UpdateOrders extends Component {
         let orderHeader;
         let addNewProduct;
         let addOldProduct;
+        let buttonStatus;
+        let oldProductStatus;
+        let productStatus;
+        if(this.state.writer==null){
+            buttonStatus=true
+        }
+        if (this.state.oldProduct == null) {
+            oldProductStatus = true
+        }
+        if (this.state.product == null) {
+            productStatus = true
+        }
         if (this.state.selectedOrder != null) { 
             orderWriterContent =<div><select onChange={this.setWriter}>
                 <option value='' disabled selected > Select a Crew Member</option>
@@ -174,7 +190,7 @@ class UpdateOrders extends Component {
                     return (<option value={person.id}>{person.username}</option>)
                 })}
             </select>
-            <button onClick={this.updateWriter}>Update Writer</button></div> 
+            <button disabled={buttonStatus} onClick={this.updateWriter}>Update Writer</button></div> 
 
             orderHeader = <h1>Update Order: {this.state.orders.map((order) => {
                 if (order.id == this.state.selectedOrder) {
@@ -182,8 +198,19 @@ class UpdateOrders extends Component {
                 }
             })}</h1>
             addOldProduct=
-            <div>
+                <Grid
+                    container
+                    style={{ padding: 20 }}
+                    direction="column"
+                    justify="space-between"
+                    alignItems="space-between">
                 Add Existing Product 
+                <Grid
+                    container
+                    style={{ paddingTop: 10 }}
+                    direction="column"
+                    justify="space-between"
+                    alignItems="space-between">
                 <select onChange={this.setOldProduct}>
                     <option value='' disabled selected> Select Product</option>
                     {this.state.allProducts.map((product)=>{
@@ -191,12 +218,30 @@ class UpdateOrders extends Component {
                             {product.product_name}</option>)
                     })}
                 </select>
-                <button onClick={this.addOldProduct}>Add Old Product</button>
-            </div>
+                </Grid>
+                <Grid
+                    container
+                    style={{ paddingTop: 10 }}
+                    direction="column"
+                    justify="space-between"
+                    alignItems="space-between">
+                <Button variant="outlined"disabled={oldProductStatus} onClick={this.addOldProduct}>Add Old Product</Button>
+            </Grid></Grid>
             addNewProduct=
-                <div>Add New Product <input type="text" placeholder="product name" 
-                        onChange={this.setProduct}/>
-                <button onClick={this.addProduct}>Add Product</button> </div>
+                <Grid
+                    container
+                    style={{ padding: 20 }}
+                    direction="column"
+                    justify="space-between"
+                    alignItems="space-between">
+                    Add New Product <input type="text" placeholder="product name" 
+                    onChange={this.setProduct} /><Grid
+                        container
+                        style={{ paddingTop: 10 }}
+                        direction="column"
+                        justify="space-between"
+                        alignItems="space-between">
+                <Button variant="outlined"disabled={productStatus} onClick={this.addProduct}>Add Product</Button></Grid> </Grid>
         }else{
             orderHeader = <h1>Update Orders</h1>
         }
@@ -206,35 +251,49 @@ class UpdateOrders extends Component {
         }
         return (
             <div>
+                <Grid contianer
+                    direction="column"
+                    justify="flex-start"
+                    alignItems="center">
+                    <Card className="dateToggle">
+                        <Grid
+                            container
+                            direction="column"
+                            justify="flex-start"
+                            alignItems="center"
+                        >
                 {orderHeader}
                 
-                {/* {JSON.stringify(this.state.oldProduct)} */}
-                {/* {JSON.stringify(this.state.selectedOrder)} */}
-                {/* <p>{JSON.stringify(this.state.historyQuery)}</p>
-                <p>{JSON.stringify(this.state.products)}</p> */}
-                {/* <p>{JSON.stringify(this.props.reduxStore.products)}</p> */}
                 <select onChange={this.setOrder}>
                     <option value="" disabled selected>Select an Order</option>
                     {this.state.orders.map((order) => {
                         return (<option value={order.id}>{order.order_name}</option>)
                     })}
                 </select>
-                {/* <button onClick={this.getHistory}>Show history</button> */}
-                <br></br>
-                
-                <br></br>
+
                 {orderWriterContent}
-                <br></br>
+
                 {currentWriter}
-                <br></br>
-                <ul>
+                        </Grid>
+                        <Grid
+                            container
+                            style={{ padding: 20 }}
+                            direction="column"
+                            justify="space-between"
+                            alignItems="space-between">
+                           
+                            
                     {this.state.orderProducts.map((product) => {
                     return (<UpdateOrdersProducts 
                     getProducts={this.getProducts} product={product}/>)
-                })}</ul>
+                    })}
+                        </Grid>
+                        
                 {addOldProduct}
                 {addNewProduct}
-                <br></br>
+   
+                </Card>
+                </Grid>
             </div>
         )
     }
