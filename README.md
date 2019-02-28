@@ -48,13 +48,6 @@
 ![Update Specific Order Bottom screen shot](wireframes/Update_Specific_Order_Bottom.png)
 
 
-
-
-## Documentation
-
-- [Link to orginal assignment:](https://github.com/PrimeAcademy/redux-pizza-parlor)
-
-
 ## Completed Features
 
 - Display a list of pizzas from the server via GET request.
