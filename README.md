@@ -50,17 +50,21 @@
 
 ## Completed Features
 
-- Display a list of pizzas from the server via GET request.
-- Add pizza to the cart/Remove pizza from cart.
-- Created header component to display on every page. Conditionally renders the current cost of the cart depending on page.
-- Page with a form to collect customer information.
-- Created an admin page that displays order history from the server.
+- Home page displays a table of orders, and the order's status, specific to the logged in user for the current date. Clicking on the order 
+takes the user to the ordersheet(s) for the clicked order.
+- The order Sheet details page allows the user to place quantities of cases for
+products for multiple days and submit or save progress. Past dates are read only.
+- Order sheets allow users to add notes to order sheets of the current day or future dates.
+- History view allows the user to view a specific past date and see what quantities were placed for the day along with any notes that were left. Notes content is conditionally rendered.
+- Manager dashboard contains tables for approved orders, incomplete orders, and orders pending approval from management. Managers can click on any order and go to the order sheet view for that order.
+- On the order sheet view, the manager can approve order sheets, add notes, or save progress. 
+- The update orders view is exclusive to management, and allows the user to update who writes an order and what products are included in an order. Users can add new and old products and delete products from orders.
 
 
 ## Future Features
 
 - More CSS and Material UI styling
-- Refactor Code
+- Refactor code. 
 
 
 ## Deployment
@@ -75,9 +79,9 @@
 
 ## Acknowledge 
 
-- I would like to thank Chris Black, my instructor at Prime, for all of his support. 
+- I would like to thank Chris Black, my instructor at Prime, for all of his support over the whole of my time at prime, and for helping me get to this project to the point in just a two week time period. 
 - I would additionally like to thank Kris Szfranski and Ally Boyd.
-- Thanks to my cohort, Zaurak.
+- Thanks to my cohort, Zaurak, and all my peers at Prime.
 
 
 
