@@ -19,7 +19,7 @@
 - `use database.sql to insert necessary tables to database.`
 - `npm run server`
 - `npm run client`
-
+- `user names: Melvin, Molly, Max, Joe. Everyone's password: 123. Joe is only Manager.`
 
 ## Screen Shots
 
