@@ -19,7 +19,7 @@
 - `use database.sql to insert necessary tables to database.`
 - `npm run server`
 - `npm run client`
-- `user names: Melvin, Molly, Max, Joe. Everyone's password: 123. Joe is only Manager.`
+- `user names: Melvin, Molly, Max, Joe. Everyone's password: 123. Joe is the only Manager.`
 
 ## Screen Shots
 
@@ -27,18 +27,23 @@
 ![Log In screen shot](wireframes/Log_In.png)
 
 ### 2 Crew Dashboard
+#### This view shows the date and the orders that a given crew member is responsible for. They can click on the orders to move to that order's ordersheet.
 ![Crew Dashboard screen shot](wireframes/Crew_Dashboard.png)
 
 ### 3 Order Sheet
+#### The crew member can manipulate quantities of products in an order (Cannot got below zero). The crew Member can also go forward and backward in time.
 ![Order Sheet screen shot](wireframes/Order_Sheet.png)
 
 ### 4 Past Order Sheet
+#### The crew member can not manipulate quantities or add notes. This is basically a read only page, but is a good reference to see what notes were left and what quantities were ordered. 
 ![Past Order Sheet screen shot](wireframes/Yesterday's_Order.png)
 
 ### 5 History
+#### This view is navigated to by selecting the calendar icon on the nav bar. This view is used to view the quantities that were ordered and notes that were left for a specific order on a specified date.
 ![History screen shot](wireframes/History.png)
 
 ### 6 Update Orders
+#### This is a manager exclusive view navigated to by clicking on the note icon on the nav bar. This view allows the manager to update what products are in an order and what crew member is responsible for the order.
 ![Update Orders screen shot](wireframes/Update_Orders.png)
 
 ### 7 Update Specific Order Top of Screen
@@ -79,7 +84,7 @@ products for multiple days and submit or save progress. Past dates are read only
 
 ## Acknowledge 
 
-- I would like to thank Chris Black, my instructor at Prime, for all of his support over the whole of my time at prime, and for helping me get to this project to the point in just a two week time period. 
+- I would like to thank Chris Black, my instructor at Prime, for all of his support over the whole of my time at prime, and for helping me get this project to this point in just a two week time period. 
 - I would additionally like to thank Kris Szfranski and Ally Boyd.
 - Thanks to my cohort, Zaurak, and all my peers at Prime.
 
