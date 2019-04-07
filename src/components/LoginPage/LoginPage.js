@@ -80,12 +80,13 @@ class LoginPage extends Component {
                 
             <input
               className="log-in"
+              style={{ height: 47, width: 194 }}
               type="submit"
               name="submit"
               value="Log In"
             />
               
-                <Button
+                {/* <Button
                 variant="contained"
                 style={{height:47, width:97}}
                   type="button"
@@ -93,7 +94,7 @@ class LoginPage extends Component {
                   onClick={() => { this.props.dispatch({ type: 'SET_TO_REGISTER_MODE' }) }}
                 >
                   Register
-          </Button>
+          </Button> */}
               
               </Grid>
           </div>
