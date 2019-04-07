@@ -1,13 +1,10 @@
 import { put, takeLatest } from 'redux-saga/effects';
 import axios from 'axios';
-function* getOrders(action) {
-    
-    
+function* getUserOrders(action) {
     try {
-        
         let response =yield axios.post('/api/dashboardGet',action.payload)
         console.log('order saga:', action.payload);
-        const orders = { type: 'SET_ORDERS', payload: response.data }
+        const orders = { type: 'SET_USER_ORDERS', payload: response.data }
         yield put(orders)
     } catch (error) {
         console.log('Error making Get request in getOrders', error);
@@ -15,8 +12,8 @@ function* getOrders(action) {
     }
 }
 
-function* ordersSaga() {
-    yield takeLatest('GET_ORDERS', getOrders);
+function* userOrdersSaga() {
+    yield takeLatest('GET_USER_ORDERS', getUserOrders);
 }
 
-export default ordersSaga;
+export default userOrdersSaga;
