@@ -31,7 +31,7 @@
 ![Crew Dashboard screen shot](wireframes/Crew_Dashboard.png)
 
 ### 3 Order Sheet
-#### The crew member can manipulate quantities of products in an order (Cannot got below zero). The crew Member can also go forward and backward in time.
+#### The crew member can manipulate quantities of products in an order (Cannot got below zero), or leave a note. The crew Member can also go forward and backward in time.
 ![Order Sheet screen shot](wireframes/Order_Sheet.png)
 
 ### 4 Past Order Sheet
