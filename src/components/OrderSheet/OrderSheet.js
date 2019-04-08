@@ -32,13 +32,12 @@ class OrderSheet extends Component {
     }
 
     componentDidMount() {
-        this.getProducts();
-        this.getNotes();
         this.getOrders();
     }
 
     getOrders = () => {
         console.log('in get orders');
+
 
         let userInfo = {
             id: this.props.reduxStore.user.id,
@@ -53,13 +52,17 @@ class OrderSheet extends Component {
             this.setState({
                 orders: response.data
             })
+            this.getNotes();
+            this.getProducts();
         })
 
     }
     getProducts = (event) => {
         console.log('in getproducts');
+        console.log('state orders', this.state.orders);
+        
         let personId;
-        for (let i = 0; i<this.state.orders.length;i++){
+        for (let i = 0; i<this.state.orders.length; i++){
             if(i.order_id==this.props.match.params.id){
                 personId=i.person_id
             }
@@ -69,6 +72,7 @@ class OrderSheet extends Component {
             date: this.state.date,
             person: personId
         }
+
         axios({
             method: 'POST',
             url: '/api/ordersheet/',
@@ -214,18 +218,20 @@ class OrderSheet extends Component {
         await this.setState({
             date: moment(this.state.date).subtract(1, 'days').format('L'),
         })
-        await this.componentDidMount()
+        await this.getOrders();
         };
+        
 
     forwardDay = async (event) => {
         await this.setState({
             date: moment(this.state.date).add(1, 'days').format('L'),
         });
-        await this.componentDidMount()
+        await this.getOrders();
     };
 
-    render() {
+render() {
         let noteContent;
+
         if (this.state.notes.length > 0) {
             noteContent = <Card><List style={{padding:10}}><h3>Existing Notes:</h3>
                 {this.state.notes.map((note) => {
@@ -350,6 +356,7 @@ class OrderSheet extends Component {
                     
                 {buttons}
                     </Card>
+                    {JSON.stringify(this.props)}
             </Grid>
             </div>
         )

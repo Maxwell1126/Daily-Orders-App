@@ -4,14 +4,24 @@ const router = express.Router();
 
 router.get('/', (req, res) => {
     if (req.isAuthenticated()) {
-        let queryText = `SELECT * FROM "order";`;
-        pool.query(queryText).then((result) => {
-            console.log('in result', result);
-            res.send(result.rows);
-            res.sendStatus(200);
-        }).catch((error) => {
-            console.log('in error', error);
-        })
+        if (req.user.manager === true) {
+            let queryText = `SELECT * FROM "order";`;
+            pool.query(queryText).then((result) => {
+                console.log('in result', result);
+                res.send(result.rows);
+            }).catch((error) => {
+                console.log('in error', error);
+            })
+        } else {
+            let queryText = `SELECT * FROM "order" WHERE "person_id" = $1;`;
+            let value = [req.user.id];
+            pool.query(queryText, value).then((result) => {
+                console.log('in result', result);
+                res.send(result.rows);
+            }).catch((error) => {
+                console.log('in error', error);
+            })
+        }
     } else {
         res.sendStatus(403);
     }
@@ -25,50 +35,51 @@ router.post('/', (req, res) => {
             try {
                 await client.query('BEGIN');
                 if (req.user.manager === false) {
-                    let queryText = `SELECT * FROM "order" WHERE "person_id"=$1`;
-                    let values = [req.body.id]
-                    let results = await client.query(queryText, values)
-                    console.log(req.body)
-                    for (order of results.rows) {
-                        queryText = `SELECT * FROM "fulfillment" 
+                    let ordersQueryText = `SELECT * FROM "order" WHERE "person_id" = $1`;
+                    let ordersValues = [req.body.id]
+                    let ordersResults = await client.query(ordersQueryText, ordersValues)
+                    // console.log(results)
+                    for (order of ordersResults.rows) {
+                        let orderQueryText = `SELECT * FROM "fulfillment" 
                                  WHERE "date" = $1
                                  AND "order_id" = $2;`;
-                                 console.log('order', order.id);
-                                 
-                        values = [req.body.date, order.id]
-                        results = await client.query(queryText, values)
-                        let resultRows = results.rows.length
+                        //  console.log('order', order.id);
+
+                        let orderValues = [req.body.date, order.id]
+                        let orderResults = await client.query(orderQueryText, orderValues)
+                        let resultRows = orderResults.rows.length
+                        // console.log('results', results);
 
                         if (resultRows === 0) {
-                            console.log('here', resultRows);
-                            
-                            queryText = `INSERT INTO "fulfillment"
+                            // console.log('here', resultRows);
+
+                            let fulfillmentQueryText = `INSERT INTO "fulfillment"
                                          ("order_id","person_id","date")
                                          VALUES($1,$2,$3)
                                          RETURNING "id";`;
-                            values = [order.id, req.body.id, req.body.date]
-                            console.log('order.id', order.id);
-                            
-                            results = await client.query(queryText, values);
-                            const resultsId = results.rows[0].id;
+                            let fulfillmentValues = [order.id, req.body.id, req.body.date]
+                            // console.log('person', req.body.id);
 
-                            queryText = `SELECT "product"."product_name",
+                            let fulfillmentResults = await client.query(fulfillmentQueryText, fulfillmentValues);
+                            const resultsId = fulfillmentResults.rows[0].id;
+
+                            let productsQueryText = `SELECT "product"."product_name",
                             "order_product"."product_id"
                             FROM "product" JOIN "order_product" 
                             ON "product"."id" = "order_product"."product_id" 
-                            WHERE "order_product"."order_id" =$1;`;
-                            values = [order.id]
-                            results = await client.query(queryText, values)
+                            WHERE "order_product"."order_id" = $1;`;
+                            let productsValues = [order.id]
+                            let productsResults = await client.query(productsQueryText, productsValues)
 
-                            if (resultRows === 0) {
-                                for (product of results.rows) {
-                                    queryText = `INSERT INTO "product_fulfillment"
+                            // if (resultRows === 0) {
+                            for (product of productsResults.rows) {
+                                let productQueryText = `INSERT INTO "product_fulfillment"
                                             ("fulfillment_id","product_id")
                                             VALUES ($1,$2);`;
-                                    values = [resultsId, product.product_id];
-                                    results = await client.query(queryText, values);
-                                }
+                                let productValues = [resultsId, product.product_id];
+                                let productResults = await client.query(productQueryText, productValues);
                             }
+                            // }
                         }
                     }
 

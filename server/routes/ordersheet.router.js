@@ -5,6 +5,7 @@ const router = express.Router();
 router.post('/', (req, res) => {
     if (req.isAuthenticated) {
         
+        console.log('in order sheet post');
         
         (async () => {
             //console.log('wreck order date 10', req.body.date);
@@ -14,21 +15,13 @@ router.post('/', (req, res) => {
                 let queryText = `SELECT "id" FROM "fulfillment" 
                                  WHERE "date" = $1
                                  AND "order_id" = $2;`;
-                let values =[req.body.date,req.body.id]
+                let values =[req.body.date, req.body.id]
                 let response = await client.query(queryText, values)
-                //console.log('response 19', response.rows.length);
-                
-                //console.log('wreck params: ', req.params);
-                
-                //console.log('responseId:', responseId);
                 
                 if (response.rows.length === 0) {
                     queryText = `INSERT INTO "fulfillment"("order_id","person_id","date")
                     VALUES($1,$2,$3) RETURNING "id";`;
-                    values = [req.body.id,req.body.person,req.body.date]
-                    //let values = [req.body.id, req.body.person];
-                    // console.log('wreck body person: ', req.body.person);
-                    // console.log('wreck body id: ', req.body.id);
+                    values = [req.body.id,req.body.person,req.body.date];
                     let results = await client.query(queryText,values);
                     // console.log('results 44: ', results);
 
@@ -58,15 +51,15 @@ router.post('/', (req, res) => {
                 "product_fulfillment"."product_id" = "product"."id"
                 WHERE "product_fulfillment"."fulfillment_id" = $1
                 GROUP BY "product"."id","product_fulfillment"."quantity"
-                ORDER BY "product"."id";`
-                values = [resultsId]
-                results =await client.query(queryText,values)
+                ORDER BY "product"."id";`;
+                values = [resultsId];
+                results =await client.query(queryText,values);
             
                 await client.query('COMMIT');
-                res.send(results.rows)
+                res.send(results.rows);
                 }else{
-                    const responseId = response.rows[0].id
-                    console.log('responseId 69', responseId);
+                    const responseId = response.rows[0].id;
+                    // console.log('responseId 69', responseId);
                     
                     queryText = `SELECT "product"."id", "product"."product_name", 
                 "product_fulfillment"."quantity", "fulfillment"."status_id" FROM "product" 
@@ -74,10 +67,10 @@ router.post('/', (req, res) => {
                 "product_fulfillment"."product_id" = "product"."id"
                 JOIN "fulfillment" ON "fulfillment"."id" = "product_fulfillment"."fulfillment_id"
                 WHERE "product_fulfillment"."fulfillment_id" = $1
-                ORDER BY "product"."id";`
-                    values = [responseId]
-                    let final = await client.query(queryText, values)
-                    console.log('results 80', final.rows);
+                ORDER BY "product"."id";`;
+                    values = [responseId];
+                    let final = await client.query(queryText, values);
+                    // console.log('results 80', final.rows);
                     
                     await client.query('COMMIT');
                     res.send(final.rows)

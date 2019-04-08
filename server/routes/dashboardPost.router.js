@@ -32,7 +32,7 @@ router.post('/', (req, res) => {
                                          VALUES($1,$2)
                                          RETURNING "id";`;
                     values = [req.body.id, response.rows[0].person_id]
-                    console.log('19 req id', response.rows[0].person_id);
+                    // console.log('19 req id', response.rows[0].person_id);
                     //let values = [req.body.id, req.body.person];
                     //console.log('wreck body person: ', req.body.person);
                     //console.log('wreck body id: ', req.body.id);
