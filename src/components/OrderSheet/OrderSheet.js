@@ -356,7 +356,6 @@ render() {
                     
                 {buttons}
                     </Card>
-                    {JSON.stringify(this.props)}
             </Grid>
             </div>
         )
