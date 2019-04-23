@@ -10,8 +10,8 @@ const passport = require('./strategies/user.strategy');
 
 // Route includes
 const userRouter = require('./routes/user.router');
-const dashboardPostRouter = require('./routes/dashboardPost.router');
-const dashboardGetRouter = require('./routes/dashboardGet.router');
+const createOrderSheetRouter = require('./routes/createOrderSheet.router');
+const ordersRouter = require('./routes/orders.router');
 const ordersheetRouter = require('./routes/ordersheet.router');
 const historyRouter = require('./routes/history.router');
 const notesAddRouter = require('./routes/notesAdd.router');
@@ -30,8 +30,8 @@ app.use(passport.session());
 
 /* Routes */
 app.use('/api/user', userRouter);
-app.use('/api/dashboardPost', dashboardPostRouter);
-app.use('/api/dashboardGet', dashboardGetRouter);
+app.use('/api/createOrderSheet', createOrderSheetRouter);
+app.use('/api/orders', ordersRouter);
 app.use('/api/ordersheet', ordersheetRouter);
 app.use('/api/history', historyRouter);
 app.use('/api/notesAdd', notesAddRouter);

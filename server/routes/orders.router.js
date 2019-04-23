@@ -3,8 +3,11 @@ const pool = require('../modules/pool');
 const router = express.Router();
 
 router.get('/', (req, res) => {
+    console.log('in get get dashboard')
     if (req.isAuthenticated()) {
         if (req.user.manager === true) {
+            console.log('its a manager');
+            
             let queryText = `SELECT * FROM "order";`;
             pool.query(queryText).then((result) => {
                 console.log('in result', result);
@@ -12,16 +15,19 @@ router.get('/', (req, res) => {
             }).catch((error) => {
                 console.log('in error', error);
             })
-        } else {
-            let queryText = `SELECT * FROM "order" WHERE "person_id" = $1;`;
-            let value = [req.user.id];
-            pool.query(queryText, value).then((result) => {
-                console.log('in result', result);
-                res.send(result.rows);
-            }).catch((error) => {
-                console.log('in error', error);
-            })
-        }
+        } 
+        // else {
+        //     console.log('its a regular');
+            
+        //     let queryText = `SELECT * FROM "order" WHERE "person_id" = $1;`;
+        //     let value = [req.user.id];
+        //     pool.query(queryText, value).then((result) => {
+        //         console.log('in result', result);
+        //         res.send(result.rows);
+        //     }).catch((error) => {
+        //         console.log('in error', error);
+        //     })
+        // }
     } else {
         res.sendStatus(403);
     }

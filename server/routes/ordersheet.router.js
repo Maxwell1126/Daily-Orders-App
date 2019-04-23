@@ -8,7 +8,7 @@ router.post('/', (req, res) => {
         console.log('in order sheet post');
         
         (async () => {
-            //console.log('wreck order date 10', req.body.date);
+         
             const client = await pool.connect();
             try {
                 await client.query('BEGIN');
@@ -23,7 +23,6 @@ router.post('/', (req, res) => {
                     VALUES($1,$2,$3) RETURNING "id";`;
                     values = [req.body.id,req.body.person,req.body.date];
                     let results = await client.query(queryText,values);
-                    // console.log('results 44: ', results);
 
                     const resultsId = results.rows[0].id;
 
@@ -31,8 +30,7 @@ router.post('/', (req, res) => {
                              FROM "product" JOIN "order_product" 
                              ON "product"."id" = "order_product"."product_id" 
                              WHERE "order_product"."order_id" =${req.body.id};`
-                    let responses = await client.query(queryText)
-                    //console.log('response', responses.rows);
+                    let responses = await client.query(queryText);
 
 
 

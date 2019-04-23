@@ -39,7 +39,7 @@ class ManagerPageOrders extends Component {
         }
         axios({
             method: 'POST',
-            url: '/api/dashboardGet',
+            url: '/api/orders',
             data: userId,
         }).then((response) => {
             this.setState({

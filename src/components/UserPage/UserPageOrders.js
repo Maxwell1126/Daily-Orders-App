@@ -32,7 +32,7 @@ class UserPageOrders extends Component {
                         date: this.state.date, }
         axios({
             method: 'POST',
-            url: '/api/dashboardGet',
+            url: '/api/orders',
             data: userId,
         }).then((response) => {
             this.setState({

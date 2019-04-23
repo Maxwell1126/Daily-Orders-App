@@ -20,7 +20,7 @@ this.state={
     toOrderSheet = (event) => {
         axios({
             method:'POST',
-            url:'/api/dashboardPost',
+            url:'/api/createOrderSheet',
             data:{
                 id:this.props.order.order_id,
                 person:this.props.order.person_id,

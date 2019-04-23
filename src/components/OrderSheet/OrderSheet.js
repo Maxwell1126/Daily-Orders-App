@@ -46,12 +46,14 @@ class OrderSheet extends Component {
         }
         axios({
             method: 'POST',
-            url: '/api/dashboardGet',
+            url: '/api/orders',
             data: userInfo,
         }).then((response) => {
             this.setState({
                 orders: response.data
             })
+            
+        }).then(() =>{
             this.getNotes();
             this.getProducts();
         })
@@ -217,9 +219,9 @@ class OrderSheet extends Component {
     backDay = async (event) => {
         await this.setState({
             date: moment(this.state.date).subtract(1, 'days').format('L'),
-        })
-        await this.getOrders();
-        };
+        });
+        await this.getOrders();   
+    };
         
 
     forwardDay = async (event) => {
