@@ -35,12 +35,12 @@ class UpdateOrders extends Component {
     getOrders = () => {
         console.log('in get orders');
 
-        let userId = { id: this.props.reduxStore.user.id,
-                        date: this.state.date }
+        // let userId = { id: this.props.reduxStore.user.id,
+        //                 date: this.state.date }
         axios({
             method: 'GET',
             url: '/api/orders',
-            data: userId,
+            // data: userId,
         }).then((response) => {
             this.setState({
                 orders: response.data
@@ -68,7 +68,7 @@ class UpdateOrders extends Component {
     getOldProduct = (event)=>{
         axios({
             method:'GET',
-            url:'/api/updateorders/oldproducts',
+            url:'/api/updateorders/oldProducts',
         }).then((response)=>{
             this.setState({
                 allProducts:response.data
@@ -93,7 +93,7 @@ class UpdateOrders extends Component {
         }
         axios({
             method: 'POST',
-            url: '/api/updateorders/old',
+            url: '/api/updateorders/addOld',
             data: productToAdd
         }).then((response) => {
             this.getProducts();
@@ -156,7 +156,7 @@ class UpdateOrders extends Component {
                             id:this.state.selectedOrder}
         axios({
             method:'POST',
-            url:'/api/updateorders/add',
+            url:'/api/updateorders/addNew',
             data:productToAdd
         }).then((response)=>{
             this.getProducts();

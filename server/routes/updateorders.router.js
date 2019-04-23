@@ -27,7 +27,7 @@ router.post('/products', (req, res) => {
     }
 });
 
-router.get('/oldproducts', (req, res) => {
+router.get('/oldProducts', (req, res) => {
     if (req.isAuthenticated) {
         let queryText = `SELECT * FROM "product"
         WHERE "id" NOT IN(SELECT"product_id" FROM "order_product");`;
@@ -56,7 +56,7 @@ router.get('/', (req, res) => {
     }
 });
 
-router.post('/old', (req, res) => {
+router.post('/addOld', (req, res) => {
     if (req.isAuthenticated) {
         (async () => {
             const client = await pool.connect();
@@ -101,7 +101,7 @@ router.post('/old', (req, res) => {
     }
 })
 
-router.post('/add', (req, res) => {
+router.post('/addNew', (req, res) => {
     if (req.isAuthenticated) {
         (async () => {
             const client = await pool.connect();
